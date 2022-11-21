@@ -5,6 +5,9 @@ from flask.cli import with_appcontext, AppGroup
 from App.database import create_db, get_migrate
 from App.main import create_app
 from App.controllers import create_user, get_all_users_json, get_all_users
+from App.controllers import *
+
+from datetime import *
 
 # This commands file allow you to create convenient CLI commands for testing controllers
 
@@ -52,6 +55,41 @@ def list_user_command(format):
 
 
 app.cli.add_command(user_cli)  # add the group to the cli
+
+"""
+COMMAND commands
+"""
+
+command_cli = AppGroup("command", help="Command object commands")
+
+
+# Then define the command and any parameters and annotate it with the group (@)
+@command_cli.command("create", help="Creates a command")
+def create_generic_command():
+    command = create_command()
+    print(f"{command.toJSON()} created!")
+
+
+@command_cli.command("upvote", help="Creates a command")
+def create_upvote_command():
+    command = create_vote_command(None, None, "upvote")
+    print(f"{command.toJSON()} created!")
+
+@command_cli.command("downvote", help="Creates a command")
+def create_upvote_command():
+    command = create_vote_command(None, None, "downvote")
+    print(f"{command.toJSON()} created!")
+
+@command_cli.command("list", help="Lists users in the database")
+@click.argument("format", default="string")
+def list_user_command(format):
+    if format == "string":
+        print(get_all_vote_commands())
+    else:
+        print(get_all_vote_commands_json())
+
+
+app.cli.add_command(command_cli)  # add the group to the cli
 
 
 """
