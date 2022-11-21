@@ -15,6 +15,9 @@ class Command(db.Model, AbstractConcreteBase):
     def execute(self):
         pass
 
+    def undo(self):
+        pass
+
     def toJSON(self):
         return {
             'id': self.id,

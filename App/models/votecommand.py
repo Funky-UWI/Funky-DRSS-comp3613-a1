@@ -32,6 +32,9 @@ class VoteCommand(Command):
     def execute(self):
         # review.upvote
         return super().execute()
+
+    def undo(self):
+        pass
     
     def toJSON(self):
         return {
