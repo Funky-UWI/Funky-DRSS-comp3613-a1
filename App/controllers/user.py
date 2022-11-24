@@ -35,7 +35,7 @@ def get_all_users_json():
     users = User.query.all()
     if not users:
         return []
-    return [user.to_json() for user in users]
+    return [user.toJSON() for user in users]
 
 
 # Updates a user's username given their id and username

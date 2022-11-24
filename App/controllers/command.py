@@ -7,8 +7,8 @@ def create_command():
     # db.session.commit()
     return command
 
-def create_vote_command(review, staffs, vote_type):
-    command = VoteCommand(review, staffs, vote_type)
+def create_vote_command(review, staff, vote_type):
+    command = VoteCommand(review, staff, vote_type)
     db.session.add(command)
     db.session.commit()
     return command

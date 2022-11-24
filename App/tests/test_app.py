@@ -3,7 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.main import create_app
 from App.database import create_db
-from App.models import User, Student, Review
+from App.models import User, Student, Review, Command, VoteCommand
 from App.controllers.auth import authenticate
 from App.controllers.user import (
     create_user,
@@ -35,6 +35,8 @@ from App.controllers.review import (
     upvote_review,
     downvote_review,
 )
+
+from datetime import datetime
 
 from wsgi import app
 
@@ -70,7 +72,7 @@ class UserUnitTests(unittest.TestCase):
     # pure function no side effects or integrations called
     def test_to_json(self):
         user = User("bob", "bobpass")
-        user_json = user.to_json()
+        user_json = user.toJSON()
         self.assertDictEqual(user_json, {"access": 1, "id": None, "username": "bob"})
 
     def test_hashed_password(self):
@@ -97,7 +99,7 @@ class StudentUnitTests(unittest.TestCase):
 
     def test_student_to_json(self):
         student = Student("bob", "FST", "Computer Science")
-        student_json = student.to_json()
+        student_json = student.toJSON()
         self.assertDictEqual(
             student_json,
             {
@@ -137,7 +139,7 @@ class ReviewUnitTests(unittest.TestCase):
 
     def test_review_to_json(self):
         review = Review(1, 1, "good")
-        review_json = review.to_json()
+        review_json = review.toJSON()
         self.assertDictEqual(
             review_json,
             {
@@ -239,6 +241,46 @@ class ReviewUnitTests(unittest.TestCase):
             )
 
 
+class VoteCommandUnitTests(unittest.TestCase):
+    username = "rob"
+    password = "robpass"
+    access = 1
+    user = User(username, password, access)
+
+    name = "Bob"
+    faculty = "FST"
+    programme = "Comp Sci"
+    student = Student(name, faculty, programme)
+
+    review = Review(user_id=user.id, student_id=student.id, text="text")
+
+    def test_votecommand_create(self):
+        
+        with self.subTest("Upvote"):
+            date = datetime.today()
+            vote = VoteCommand(review=self.review, staff=self.user, vote_type="upvote")
+
+            self.assertDictEqual(vote.toJSON(), {
+                'id': None,
+                'vote_type': 1,
+                'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
+                'review': self.review.toJSON(),
+                'staff': self.user.toJSON()
+            })
+
+        with self.subTest("Downvote"):
+            date = datetime.today()
+            vote = VoteCommand(review=self.review, staff=self.user, vote_type="downvote")
+
+            self.assertDictEqual(vote.toJSON(), {
+                'id': None,
+                'vote_type': -1,
+                'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
+                'review': self.review.toJSON(),
+                'staff': self.user.toJSON()
+            })
+
+
 """
     Integration Tests
 """
@@ -250,7 +292,7 @@ def empty_db():
     app.config.update({"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db"})
     create_db(app)
     yield app.test_client()
-    # os.unlink(os.getcwd() + "/App/test.db")
+    os.unlink(os.getcwd() + "/App/test.db")
 
 
 # Integration tests for User model
@@ -277,7 +319,7 @@ class UsersIntegrationTests(unittest.TestCase):
     def test_get_all_users_json(self):
         users = get_all_users()
         users_json = get_all_users_json()
-        assert users_json == [user.to_json() for user in users]
+        assert users_json == [user.toJSON() for user in users]
 
     def test_update_user(self):
         user = create_user("danny", "johnpass", 1)
@@ -305,7 +347,7 @@ class StudentIntegrationTests(unittest.TestCase):
     def test_get_all_students_json(self):
         students = get_all_students()
         students_json = get_all_students_json()
-        assert students_json == [student.to_json() for student in students]
+        assert students_json == [student.toJSON() for student in students]
 
     # tests updating a student's name, programme and/or faculty
     def test_update_student(self):
@@ -356,12 +398,12 @@ class ReviewIntegrationTests(unittest.TestCase):
     def test_get_review_json(self):
         test_review = create_review(1, 1, "good")
         review_json = get_review_json(test_review.id)
-        assert review_json == test_review.to_json()
+        assert review_json == test_review.toJSON()
 
     def test_get_all_reviews_json(self):
         reviews = get_all_reviews()
         reviews_json = get_all_reviews_json()
-        assert reviews_json == [review.to_json() for review in reviews]
+        assert reviews_json == [review.toJSON() for review in reviews]
 
     def test_upvote_review(self):
         test_review = create_review(1, 1, "good")

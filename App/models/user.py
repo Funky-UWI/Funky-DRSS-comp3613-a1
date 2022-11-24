@@ -27,7 +27,7 @@ class User(db.Model):
     def allowed(self, access_level):
         return self.access >= access_level
 
-    def to_json(self):
+    def toJSON(self):
         return {"id": self.id, "username": self.username, "access": self.access}
 
     def set_password(self, password):
@@ -37,3 +37,10 @@ class User(db.Model):
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
+
+    def toJSON(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'access': self.access
+        }

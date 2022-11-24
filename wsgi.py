@@ -71,8 +71,10 @@ def create_generic_command():
 
 
 @command_cli.command("upvote", help="Creates a command")
-def create_upvote_command():
-    command = create_vote_command(None, None, "upvote")
+@click.argument('staff_id', default=1)
+def create_upvote_command(staff_id):
+    staff = get_user(staff_id)
+    command = create_vote_command(None, staff, "upvote")
     print(f"{command.toJSON()} created!")
 
 @command_cli.command("downvote", help="Creates a command")
@@ -123,7 +125,7 @@ def user_tests_command(type):
 
 @test.command("student", help="Run Student tests")
 @click.argument("type", default="all")
-def user_tests_command(type):
+def student_tests_command(type):
     if type == "unit":
         sys.exit(pytest.main(["-k", "StudentUnitTests"]))
     elif type == "int":
@@ -134,11 +136,32 @@ def user_tests_command(type):
 
 @test.command("review", help="Run Student tests")
 @click.argument("type", default="all")
-def user_tests_command(type):
+def review_tests_command(type):
     if type == "unit":
         sys.exit(pytest.main(["-k", "ReviewUnitTests"]))
     elif type == "int":
         sys.exit(pytest.main(["-k", "ReviewIntegrationTests"]))
+    else:
+        sys.exit(pytest.main(["-k", "App"]))
+
+
+@test.command("command", help="Run Command tests")
+@click.argument("type", default="all")
+def command_tests_command(type):
+    if type == "unit":
+        sys.exit(pytest.main(["-k", "CommandUnitTests"]))
+    elif type == "int":
+        sys.exit(pytest.main(["-k", "CommandIntegrationTests"]))
+    else:
+        sys.exit(pytest.main(["-k", "App"]))
+
+@test.command("votecommand", help="Run VoteCommand tests")
+@click.argument("type", default="all")
+def votecommand_tests_command(type):
+    if type == "unit":
+        sys.exit(pytest.main(["-k", "VoteCommandUnitTests"]))
+    elif type == "int":
+        sys.exit(pytest.main(["-k", "VoteCommandIntegrationTests"]))
     else:
         sys.exit(pytest.main(["-k", "App"]))
 

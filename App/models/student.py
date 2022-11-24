@@ -21,7 +21,7 @@ class Student(db.Model):
             karma += review.get_karma()
         return karma
 
-    def to_json(self):
+    def toJSON(self):
         return {
             "id": self.id,
             "name": self.name,

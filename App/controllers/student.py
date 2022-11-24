@@ -32,7 +32,7 @@ def get_all_students_json():
     students = Student.query.all()
     if not students:
         return []
-    return [student.to_json() for student in students]
+    return [student.toJSON() for student in students]
 
 
 # Gets all reviews for a student given their id.
@@ -41,7 +41,7 @@ def get_all_student_reviews(id):
     student = Student.query.get(id)
     if not student:
         return {"error": "student not found"}, 404
-    return [review.to_json() for review in student.reviews], 200
+    return [review.toJSON() for review in student.reviews], 200
 
 
 # Updates a student given their id, name, programme and faculty

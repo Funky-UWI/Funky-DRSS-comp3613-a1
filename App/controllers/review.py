@@ -52,7 +52,7 @@ def get_review(id):
 def get_review_json(id):
     review = Review.query.get(id)
     if review:
-        return review.to_json()
+        return review.toJSON()
     return None
 
 
@@ -66,7 +66,7 @@ def get_all_reviews():
 def get_all_reviews_json():
     reviews = Review.query.all()
     if reviews:
-        return [review.to_json() for review in reviews]
+        return [review.toJSON() for review in reviews]
     return None
 
 

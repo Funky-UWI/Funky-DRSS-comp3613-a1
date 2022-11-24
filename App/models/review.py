@@ -41,7 +41,7 @@ class Review(db.Model):
     def get_all_votes(self):
         return self.votes
 
-    def to_json(self):
+    def toJSON(self):
         return {
             "id": self.id,
             "user_id": self.user_id,

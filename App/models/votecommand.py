@@ -18,9 +18,10 @@ class VoteCommand(Command):
     vote_type = db.Column(db.Integer, nullable=False)
     review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=True)
     # review = db.relationship("Review", back_populates="votecommand")
+    review = db.relationship("Review")
 
-    staff_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
-    # staff = db.relationship("User", back_populates="votecommand")
+    staff_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    staff = db.relationship("User")
 
     def __init__(self, review, staff, vote_type):
         # self.date = date
@@ -41,6 +42,6 @@ class VoteCommand(Command):
             'id': self.id,
             'vote_type': self.vote_type,
             'date': super().toJSON()['date'],
-            # 'review': self.review.toJSON(),
-            # 'staff': self.staff.toJSON()
+            'review': self.review.toJSON(),
+            'staff': self.staff.toJSON()
         }
