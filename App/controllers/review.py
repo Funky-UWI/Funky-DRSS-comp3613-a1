@@ -141,3 +141,19 @@ def get_review_karma(id):
     if review:
         return review.get_karma()
     return None
+
+
+#get upvotes by review given the review id
+def get_upvotes_by_review(id)
+    review=Review.query.get(id)
+    if review:
+        return Review.query.get_num_upvotes
+    return None
+
+#get downvotes by review given the review id
+def get_downvotes_by_review(id)
+    review=Review.query.get(id)
+    if review:
+        return Review.query.get_num_downvotes
+    return None
+
