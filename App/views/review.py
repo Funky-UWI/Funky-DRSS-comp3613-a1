@@ -7,6 +7,8 @@ from App.controllers import (
     get_all_reviews,
     update_review,
     delete_review,
+    create_vote_command,
+    get_user
 )
 
 review_views = Blueprint("review_views", __name__, template_folder="../templates")
@@ -21,7 +23,7 @@ def create_review_action():
         user_id=data["user_id"], student_id=data["student_id"], text=data["text"]
     )
     if review:
-        return jsonify(review.to_json()), 201
+        return jsonify(review.toJSON()), 201
     return jsonify({"error": "review not created"}), 400
 
 
@@ -30,7 +32,7 @@ def create_review_action():
 @jwt_required()
 def get_all_reviews_action():
     reviews = get_all_reviews()
-    return jsonify([review.to_json() for review in reviews]), 200
+    return jsonify([review.toJSON() for review in reviews]), 200
 
 
 # Gets review given review id
@@ -39,7 +41,7 @@ def get_all_reviews_action():
 def get_review_action(review_id):
     review = get_review(review_id)
     if review:
-        return jsonify(review.to_json()), 200
+        return jsonify(review.toJSON()), 200
     return jsonify({"error": "review not found"}), 404
 
 
@@ -50,7 +52,7 @@ def upvote_review_action(review_id):
     review = get_review(review_id)
     if review:
         review.vote(current_identity.id, "up")
-        return jsonify(review.to_json()), 200
+        return jsonify(review.toJSON()), 200
     return jsonify({"error": "review not found"}), 404
 
 
@@ -61,9 +63,19 @@ def downvote_review_action(review_id):
     review = get_review(review_id)
     if review:
         review.vote(current_identity.id, "down")
-        return jsonify(review.to_json()), 200
+        return jsonify(review.toJSON()), 200
     return jsonify({"error": "review not found"}), 404
 
+@review_views.route("/api/reviews/<int:review_id>/vote", methods=["PUT"])
+@jwt_required()
+def vote_review_action(review_id):
+    review = get_review(review_id)
+    if not review:
+        return "No such review exists.", 404
+    staff = get_user(review.user_id)
+    vote_type = "downvote"
+    vote = create_vote_command(review=review, staff=staff, vote_type=vote_type)
+    return jsonify(vote.toJSON())
 
 # Updates post given post id and new text
 # Only admins or the original reviewer can edit a review

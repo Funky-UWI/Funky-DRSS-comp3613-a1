@@ -26,7 +26,7 @@ def create_student_action():
             name=data["name"], programme=data["programme"], faculty=data["faculty"]
         )
         if student:
-            return jsonify(student.to_json()), 201
+            return jsonify(student.toJSON()), 201
         return jsonify({"error": "student not created"}), 400
     return jsonify({"error": "unauthorized"}), 401
 
@@ -45,7 +45,7 @@ def update_student_action(student_id):
             faculty=data["faculty"],
         )
         if student:
-            return jsonify(student.to_json()), 200
+            return jsonify(student.toJSON()), 200
         return jsonify({"error": "student not updated"}), 400
     return jsonify({"error": "unauthorized"}), 401
 
@@ -56,7 +56,7 @@ def update_student_action(student_id):
 def get_all_students_action():
     students = get_all_students()
     if students:
-        return jsonify([student.to_json() for student in students]), 200
+        return jsonify([student.toJSON() for student in students]), 200
     return jsonify({"error": "students not found"}), 404
 
 
@@ -66,7 +66,7 @@ def get_all_students_action():
 def get_student_action(student_id):
     student = get_student(student_id)
     if student:
-        return jsonify(student.to_json()), 200
+        return jsonify(student.toJSON()), 200
     return jsonify({"error": "student not found"}), 404
 
 
@@ -76,7 +76,7 @@ def get_student_action(student_id):
 def get_student_by_name_action(name):
     students = get_students_by_name(name)
     if students:
-        return jsonify([student.to_json() for student in students]), 200
+        return jsonify([student.toJSON() for student in students]), 200
     return jsonify({"error": "student not found"}), 404
 
 

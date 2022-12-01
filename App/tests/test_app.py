@@ -34,6 +34,7 @@ from App.controllers.review import (
     get_all_reviews_json,
     upvote_review,
     downvote_review,
+    vote_review
 )
 
 from datetime import datetime
@@ -408,6 +409,7 @@ class ReviewIntegrationTests(unittest.TestCase):
     def test_upvote_review(self):
         test_review = create_review(1, 1, "good")
         upvote_review(test_review.id, 1)
+        # vote_review(test_review.id, )
         assert get_review(test_review.id).get_num_upvotes() == 1
 
     def test_downvote_review(self):
