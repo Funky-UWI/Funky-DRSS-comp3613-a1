@@ -30,12 +30,13 @@ class VoteCommand(Command):
         self.review = review
         self.staff = staff
 
-    def execute(self):
-        # review.upvote
-        return super().execute()
+    # def execute(self):
+    #     self.review.vote(self.staff_id, self.vote_type)
+    #     # return super().execute()
 
-    def undo(self):
-        pass
+    # def undo(self):
+    #     if self.vote_type==1:
+
     
     def toJSON(self):
         return {

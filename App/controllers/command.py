@@ -21,3 +21,7 @@ def get_all_vote_commands_json():
     commands = VoteCommand.query.all()
     commands = [command.toJSON() for command in commands]
     return commands
+
+def get_votes_by_staff(staff_id):
+    votes = VoteCommand.query.filter_by(staff_id = staff_id)
+    return votes

@@ -8,7 +8,8 @@ from App.controllers import (
     update_review,
     delete_review,
     create_vote_command,
-    get_user
+    get_user,
+    get_votes_by_staff
 )
 
 review_views = Blueprint("review_views", __name__, template_folder="../templates")
@@ -69,12 +70,19 @@ def downvote_review_action(review_id):
 @review_views.route("/api/reviews/<int:review_id>/vote", methods=["PUT"])
 @jwt_required()
 def vote_review_action(review_id):
+
     review = get_review(review_id)
     if not review:
         return "No such review exists.", 404
+
+    # # staff should not be able to vote more than once, new votes override older ones
+    # votes = get_votes_by_staff(staff_id=review.user_id)
+    # return jsonify([vote.toJSON() for vote in votes])
+
     staff = get_user(review.user_id)
     vote_type = "downvote"
     vote = create_vote_command(review=review, staff=staff, vote_type=vote_type)
+
     return jsonify(vote.toJSON())
 
 # Updates post given post id and new text
