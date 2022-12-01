@@ -1,0 +1,24 @@
+/* required to keep content out of sidenav */
+.container {
+    padding-left: 150px;
+    /*or 300*/
+}
+
+
+@media only screen and (max-width : 992px) {
+
+    head,
+    body,
+    /* nav,  */
+    footer
+    {
+        padding-left: 0;
+    }
+}
+/* copied from materialize sidenav-fixed code */
+
+
+/* push sidenav down */
+#slide-out {
+    top: 64px;
+}
