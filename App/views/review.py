@@ -47,6 +47,7 @@ def get_review_action(review_id):
 
 
 # Upvotes post given post id and user id
+# DEPRECATED
 @review_views.route("/api/reviews/<int:review_id>/upvote", methods=["PUT"])
 @jwt_required()
 def upvote_review_action(review_id):
@@ -58,6 +59,7 @@ def upvote_review_action(review_id):
 
 
 # Downvotes post given post id and user id
+# DEPRECATED
 @review_views.route("/api/reviews/<int:review_id>/downvote", methods=["PUT"])
 @jwt_required()
 def downvote_review_action(review_id):
@@ -67,9 +69,13 @@ def downvote_review_action(review_id):
         return jsonify(review.toJSON()), 200
     return jsonify({"error": "review not found"}), 404
 
-@review_views.route("/api/reviews/<int:review_id>/vote", methods=["PUT"])
+@review_views.route("/api/reviews/<int:review_id>/vote", methods=["PUT"]) #/vote?type=upvote
 @jwt_required()
 def vote_review_action(review_id):
+    vote_type = request.args.get("type")
+
+    if not type:
+        return "No specified vote type. Upvote or downvote.", 400
 
     review = get_review(review_id)
     if not review:
@@ -80,7 +86,6 @@ def vote_review_action(review_id):
     # return jsonify([vote.toJSON() for vote in votes])
 
     staff = get_user(review.user_id)
-    vote_type = "downvote"
     vote = create_vote_command(review=review, staff=staff, vote_type=vote_type)
 
     return jsonify(vote.toJSON())

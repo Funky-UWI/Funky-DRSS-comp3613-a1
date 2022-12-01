@@ -408,11 +408,12 @@ class ReviewIntegrationTests(unittest.TestCase):
 
     def test_upvote_review(self):
         test_review = create_review(1, 1, "good")
-        upvote_review(test_review.id, 1)
-        # vote_review(test_review.id, )
+        # upvote_review(test_review.id, 1)
+        vote_review(test_review.id, 1, "upvote")
         assert get_review(test_review.id).get_num_upvotes() == 1
 
     def test_downvote_review(self):
         test_review = create_review(1, 1, "good")
-        downvote_review(test_review.id, 1)
+        # downvote_review(test_review.id, 1)
+        vote_review(test_review.id, 1, "downvote")
         assert get_review(test_review.id).get_num_downvotes() == 1

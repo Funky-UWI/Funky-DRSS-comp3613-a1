@@ -87,14 +87,14 @@ def get_reviews_by_user(user_id):
 def vote_review(review_id, user_id, vote_type):
     review = Review.query.get(review_id)
     user = User.query.get(user_id)
-    vote_type = VoteCommand.query.get(VoteTypeEnum)
-    if vote_type == 1:
+    # vote_type = VoteCommand.query.get(VoteTypeEnum)
+    if vote_type == "upvote":
         if review and user:
          review.vote(user_id, "up")
          db.session.add(review)
          db.session.commit()
          return review
-    elif vote_type == -1:
+    elif vote_type == "downvote":
         if review and user:
             review.vote(user_id, "down")
         db.session.add(review)
@@ -103,28 +103,28 @@ def vote_review(review_id, user_id, vote_type):
     return None
 
 
-def upvote_review(review_id, user_id):
-     review = Review.query.get(review_id)
-     user = User.query.get(user_id)
-     if review and user:
-         review.vote(user_id, "up")
-         db.session.add(review)
-         db.session.commit()
-         return review
-     return None
+# def upvote_review(review_id, user_id):
+#      review = Review.query.get(review_id)
+#      user = User.query.get(user_id)
+#      if review and user:
+#          review.vote(user_id, "up")
+#          db.session.add(review)
+#          db.session.commit()
+#          return review
+#      return None
 
 
- # Downvotes a post given a review id and user id
- # Returns the review object if successful, None otherwise
-def downvote_review(review_id, user_id):
-     review = Review.query.get(review_id)
-     user = User.query.get(user_id)
-     if review and user:
-         review.vote(user_id, "down")
-         db.session.add(review)
-         db.session.commit()
-         return review
-     return None
+#  # Downvotes a post given a review id and user id
+#  # Returns the review object if successful, None otherwise
+# def downvote_review(review_id, user_id):
+#      review = Review.query.get(review_id)
+#      user = User.query.get(user_id)
+#      if review and user:
+#          review.vote(user_id, "down")
+#          db.session.add(review)
+#          db.session.commit()
+#          return review
+#      return None
 
 
 # Gets all votes for a review given the review id
