@@ -30,6 +30,7 @@ class VoteCommand(Command):
         self.review = review
         self.review_id = review.id
         self.staff = staff
+        self.staff_id = staff.id
 
     # def execute(self):
     #     self.review.vote(self.staff_id, self.vote_type)

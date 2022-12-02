@@ -319,7 +319,7 @@ def empty_db():
 
 
 # Integration tests for User model
-class UsersIntegrationTests(unittest.TestCase):
+class UserIntegrationTests(unittest.TestCase):
     def test_authenticate(self):
         user = create_user("bob", "bobpass")
         assert authenticate("bob", "bobpass") is not None
@@ -475,7 +475,8 @@ class VoteCommandIntegrationTests(unittest.TestCase):
                 }
             )
 
-    def test_get_upvotes_by_review(self):    
+    def test_get_upvotes_by_review(self):   
+        staff = get_user(1) 
         with self.subTest("0 votes"):
             review = create_review(student_id=1, user_id=1, text="good")
             upvotes=get_upvotes_by_review(review.id)
@@ -485,7 +486,7 @@ class VoteCommandIntegrationTests(unittest.TestCase):
         with self.subTest("1 Upvote"):
             review = create_review(student_id=1, user_id=1, text="good")
             date = datetime.today()
-            vote = create_vote_command(review=review, staff=self.staff, vote_type="upvote")
+            vote = create_vote_command(review=review, staff=staff, vote_type="upvote")
             upvotes = get_upvotes_by_review(review.id)
             self.assertListEqual(
                 upvotes,
@@ -495,8 +496,8 @@ class VoteCommandIntegrationTests(unittest.TestCase):
         with self.subTest("2 Upvotes"):
             review = create_review(student_id=1, user_id=1, text="good")
             date = datetime.today()
-            upvote1 = create_vote_command(review=review, staff=self.staff, vote_type="upvote")
-            upvote2 = create_vote_command(review=review, staff=self.staff, vote_type="upvote")
+            upvote1 = create_vote_command(review=review, staff=staff, vote_type="upvote")
+            upvote2 = create_vote_command(review=review, staff=staff, vote_type="upvote")
             upvotes = get_upvotes_by_review(review.id)
             self.assertListEqual(
                 upvotes,
