@@ -33,7 +33,7 @@ class Review(db.Model):
         num_upvotes=0
         votecommands= VoteCommand.query.filter_by(review_id=review_id)
         for votecommand in self.votecommands:
-            if votecommand.vote_type==1
+            if votecommand.vote_type==1:
                 num_upvotes+=1
         return num_upvotes
 
@@ -41,7 +41,7 @@ class Review(db.Model):
         num_downvotes=0
         votecommands= VoteCommand.query.filter_by(review_id=review_id)
         for votecommand in self.votecommands:
-            if votecommand.vote_type==-1
+            if votecommand.vote_type==-1:
                 num_downvotes+=1
         return num_downvotes
 
