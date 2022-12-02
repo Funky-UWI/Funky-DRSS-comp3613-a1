@@ -30,10 +30,22 @@ class Review(db.Model):
         )
 
     def get_num_upvotes(self):
-        return self.votes["num_upvotes"]
+        if not self.votes:
+            return 0
+        num_upvotes=0
+        for vote in self.votes:
+            if(vote.value=="up"):
+                num_upvotes=num_upvotes+1
+        return num_upvotes
 
     def get_num_downvotes(self):
-        return self.votes["num_downvotes"]
+        if not self.votes:
+            return 0
+        num_downvotes=0
+        for vote in self.votes:
+            if(vote.value=="down"):
+                num_downvotes=num_downvotes+1
+        return num_downvotes
 
     def get_karma(self):
         return self.get_num_upvotes() - self.get_num_downvotes()
