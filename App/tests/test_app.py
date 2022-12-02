@@ -179,12 +179,15 @@ class ReviewUnitTests(unittest.TestCase):
 
         with self.subTest("One upvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "up")
+            # review.vote(1, "up")
+            # VoteCommand(review, get_user(1), "upvote")
+            create_vote_command(review, get_user(1), "upvote")
             self.assertEqual(review.get_num_upvotes(), 1)
 
         with self.subTest("One downvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "down")
+            # review.vote(1, "down")
+            create_vote_command(review, get_user(1), "downvote")
             self.assertEqual(review.get_num_upvotes(), 0)
 
     def test_review_get_num_downvotes(self):
@@ -194,12 +197,14 @@ class ReviewUnitTests(unittest.TestCase):
 
         with self.subTest("One upvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "up")
+            # review.vote(1, "up")
+            create_vote_command(review, get_user(1), "upvote")
             self.assertEqual(review.get_num_downvotes(), 0)
 
         with self.subTest("One downvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "down")
+            # review.vote(1, "down")
+            create_vote_command(review, get_user(1), "downvote")
             self.assertEqual(review.get_num_downvotes(), 1)
 
     def test_review_get_karma(self):
@@ -209,12 +214,14 @@ class ReviewUnitTests(unittest.TestCase):
 
         with self.subTest("One upvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "up")
+            # review.vote(1, "up")
+            create_vote_command(review, get_user(1), "upvote")
             self.assertEqual(review.get_karma(), 1)
 
         with self.subTest("One downvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "down")
+            # review.vote(1, "down")
+            create_vote_command(review, get_user(1), "downvote")
             self.assertEqual(review.get_karma(), -1)
 
     def test_review_get_all_votes(self):
@@ -222,44 +229,38 @@ class ReviewUnitTests(unittest.TestCase):
             review = Review(1, 1, "good")
             self.assertEqual(
                 # review.get_all_votes(), {"num_upvotes": 0, "num_downvotes": 0}
-                review.get_num_upvotes(), 0
+                review.get_all_votes(), 0
             )
 
         with self.subTest("One upvote"):
             review = Review(1, 1, "good")
             # review.vote(1, "up")
-            # create_vote_command(review, staff=get_user(1), vote_type="upvote")
-            VoteCommand(review=review, staff=get_user(1), vote_type="upvote")
+            create_vote_command(review, staff=get_user(1), vote_type="upvote")
+            # VoteCommand(review=review, staff=get_user(1), vote_type="upvote")
             self.assertEqual(
                 # review.get_all_votes(), {1: "up", "num_upvotes": 1, "num_downvotes": 0}
-                review.get_num_upvotes(), 1
+                review.get_all_votes(), 1
             )
 
         with self.subTest("One downvote"):
             review = Review(1, 1, "good")
             # review.vote(1, "down")
-            # create_vote_command(review, staff=get_user(1), vote_type="downvote")
-            VoteCommand(review=review, staff=get_user(1), vote_type="downvote")
+            create_vote_command(review, staff=get_user(1), vote_type="downvote")
+            # VoteCommand(review=review, staff=get_user(1), vote_type="downvote")
             self.assertEqual(
                 # review.get_all_votes(), {1: "down", "num_upvotes": 0, "num_downvotes": 1}
-                review.get_num_downvotes(), 1
+                review.get_all_votes(), 1
             )
 
         with self.subTest("One upvote and one downvote"):
             review = Review(1, 1, "good")
             # review.vote(1, "up")
             # review.vote(2, "down")
-            # create_vote_command(review, staff=get_user(1), vote_type="upvote")
-            # create_vote_command(review, staff=get_user(1), vote_type="downvote")
-            VoteCommand(review=review, staff=get_user(1), vote_type="upvote")
-            VoteCommand(review=review, staff=get_user(1), vote_type="downvote")
+            create_vote_command(review, staff=get_user(1), vote_type="upvote")
+            create_vote_command(review, staff=get_user(1), vote_type="downvote")
             self.assertEqual(
                 # review.get_all_votes(), {1: "up", 2: "down", "num_upvotes": 1, "num_downvotes": 1}
-                review.get_num_upvotes(), 1
-            )
-            self.assertEqual(
-                # review.get_all_votes(), {1: "up", 2: "down", "num_upvotes": 1, "num_downvotes": 1}
-                review.get_num_downvotes(), 1
+                review.get_all_votes(), 2
             )
 
 
@@ -427,17 +428,17 @@ class ReviewIntegrationTests(unittest.TestCase):
         reviews_json = get_all_reviews_json()
         assert reviews_json == [review.toJSON() for review in reviews]
 
-    # def test_upvote_review(self):
-    #     test_review = create_review(1, 1, "good")
-    #     # upvote_review(test_review.id, 1)
-    #     vote_review(test_review.id, 1, "upvote")
-    #     assert get_review(test_review.id).get_num_upvotes() == 1
+    def test_upvote_review(self):
+        test_review = create_review(1, 1, "good")
+        # upvote_review(test_review.id, 1)
+        vote_review(test_review.id, 1, "upvote")
+        assert get_review(test_review.id).get_num_upvotes() == 1
 
-    # def test_downvote_review(self):
-    #     test_review = create_review(1, 1, "good")
-    #     # downvote_review(test_review.id, 1)
-    #     vote_review(test_review.id, 1, "downvote")
-    #     assert get_review(test_review.id).get_num_downvotes() == 1
+    def test_downvote_review(self):
+        test_review = create_review(1, 1, "good")
+        # downvote_review(test_review.id, 1)
+        vote_review(test_review.id, 1, "downvote")
+        assert get_review(test_review.id).get_num_downvotes() == 1
 
 # Integration tests for Vote model
 class VoteCommandIntegrationTests(unittest.TestCase):

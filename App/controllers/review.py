@@ -1,4 +1,7 @@
 from App.models import Review, Student, User,VoteCommand
+from App.controllers.command import (
+    create_vote_command
+)
 from App.database import db
 
 
@@ -85,22 +88,24 @@ def get_reviews_by_user(user_id):
 # Upvotes/Downvotes a post given a review id and user id based on Vote Type
 # Returns the review object if successful, None otherwise
 def vote_review(review_id, user_id, vote_type):
-    review = Review.query.get(review_id)
-    user = User.query.get(user_id)
-    # vote_type = VoteCommand.query.get(VoteTypeEnum)
-    if vote_type == "upvote":
-        if review and user:
-         review.vote(user_id, "up")
-         db.session.add(review)
-         db.session.commit()
-         return review
-    elif vote_type == "downvote":
-        if review and user:
-            review.vote(user_id, "down")
-        db.session.add(review)
-        db.session.commit()
-        return review
-    return None
+    create_vote_command(get_review(review_id), get_user(user_id), vote_type)
+    # review = Review.query.get(review_id)
+    # user = User.query.get(user_id)
+    # # vote_type = VoteCommand.query.get(VoteTypeEnum)
+    # if vote_type == "upvote":
+    #     if review and user:
+    #      review.vote(user_id, "up")
+    #      db.session.add(review)
+    #      db.session.commit()
+    #      return review
+    # elif vote_type == "downvote":
+    #     if review and user:
+    #         review.vote(user_id, "down")
+    #     db.session.add(review)
+    #     db.session.commit()
+    #     return review
+    # return None
+
 
 
 # def upvote_review(review_id, user_id):

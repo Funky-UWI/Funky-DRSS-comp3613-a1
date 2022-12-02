@@ -55,7 +55,11 @@ class Review(db.Model):
         return self.get_num_upvotes() - self.get_num_downvotes()
 
     def get_all_votes(self):
-        return self.votes
+        num_votes=0
+        votecommands= VoteCommand.query.filter_by(review_id=self.id)
+        for votecommand in votecommands:
+            num_votes+= 1
+        return num_votes
 
     def toJSON(self):
         return {
