@@ -2,7 +2,7 @@
 <html>
   <head>
   
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
      <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Compiled and minified CSS -->
@@ -34,6 +34,34 @@
       </nav>
       {% endif %}
       {% endwith %}
+
+
+      <div class="center">
+        <h1>Registration</h1>
+        <form action='/signup' method="post" enctype="application/x-www-form-urlencoded" class="container">
+
+            <div class="row">
+                <div class="input_field">
+                    <input type="text" id="username" name="username" required>
+                    <label for="username">Create Username</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input_field">
+                    <input type="password" id="password" name="password" required>
+                    <label for="password">Create Password</label>
+                </div>
+            </div>
+
+            <!-- <div class="pass">Forget Password?</div> -->
+            <input type="Submit" value="signup" class="btn orange darken-4 row">
+            <div class="signup_link">
+                Already have an account? <a href="/login">Login</a>
+
+            </div>
+        </form>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </body>
