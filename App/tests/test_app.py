@@ -224,6 +224,13 @@ class ReviewUnitTests(unittest.TestCase):
             create_vote_command(review, get_user(1), "downvote")
             self.assertEqual(review.get_karma(), -1)
 
+        with self.subTest("One downvote and One upvote"):
+            review = Review(1, 1, "good")
+            # review.vote(1, "down")
+            create_vote_command(review, get_user(1), "upvote")
+            create_vote_command(review, get_user(1), "downvote")
+            self.assertEqual(review.get_karma(), 0)
+
     def test_review_get_all_votes(self):
         with self.subTest("No votes"):
             review = Review(1, 1, "good")
