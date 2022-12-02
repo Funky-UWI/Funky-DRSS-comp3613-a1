@@ -35,6 +35,8 @@ from App.controllers.review import (
     upvote_review,
     downvote_review,
     vote_review
+    get_num_upvotes
+    get_num_downvotes
 )
 
 from datetime import datetime
