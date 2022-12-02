@@ -28,6 +28,7 @@ class VoteCommand(Command):
         super().__init__()
         self.vote_type = VoteTypeDict[vote_type]
         self.review = review
+        self.review_id = review.id
         self.staff = staff
 
     # def execute(self):

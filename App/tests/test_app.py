@@ -427,17 +427,17 @@ class ReviewIntegrationTests(unittest.TestCase):
         reviews_json = get_all_reviews_json()
         assert reviews_json == [review.toJSON() for review in reviews]
 
-    def test_upvote_review(self):
-        test_review = create_review(1, 1, "good")
-        # upvote_review(test_review.id, 1)
-        vote_review(test_review.id, 1, "upvote")
-        assert get_review(test_review.id).get_num_upvotes() == 1
+    # def test_upvote_review(self):
+    #     test_review = create_review(1, 1, "good")
+    #     # upvote_review(test_review.id, 1)
+    #     vote_review(test_review.id, 1, "upvote")
+    #     assert get_review(test_review.id).get_num_upvotes() == 1
 
-    def test_downvote_review(self):
-        test_review = create_review(1, 1, "good")
-        # downvote_review(test_review.id, 1)
-        vote_review(test_review.id, 1, "downvote")
-        assert get_review(test_review.id).get_num_downvotes() == 1
+    # def test_downvote_review(self):
+    #     test_review = create_review(1, 1, "good")
+    #     # downvote_review(test_review.id, 1)
+    #     vote_review(test_review.id, 1, "downvote")
+    #     assert get_review(test_review.id).get_num_downvotes() == 1
 
 # Integration tests for Vote model
 class VoteCommandIntegrationTests(unittest.TestCase):

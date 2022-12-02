@@ -36,6 +36,7 @@ class Review(db.Model):
         num_upvotes=0
         # votecommands = get_votes_by_review(review_id)
         votecommands= VoteCommand.query.filter_by(review_id=self.id)
+        # votecommands = []
         for votecommand in votecommands:
             if votecommand.vote_type==1:
                 num_upvotes+=1
