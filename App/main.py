@@ -6,6 +6,7 @@ from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from datetime import timedelta
+from App.controllers.user import get_user
 
 
 from App.database import create_db
@@ -58,5 +59,15 @@ def create_app(config={}):
     add_views(app, views)
     create_db(app)
     setup_jwt(app)
+    # session based
+    login_manager.init_app(app)
+    login_manager.login_view="index_views.login"
+    
     app.app_context().push()
     return app
+
+login_manager = LoginManager()
+
+@login_manager.user_loader
+def load_user(id):
+    return get_user(id)
