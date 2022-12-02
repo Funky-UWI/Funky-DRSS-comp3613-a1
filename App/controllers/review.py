@@ -2,6 +2,9 @@ from App.models import Review, Student, User,VoteCommand
 from App.controllers.command import (
     create_vote_command
 )
+from App.controllers.user import (
+    get_user
+)
 from App.database import db
 
 
