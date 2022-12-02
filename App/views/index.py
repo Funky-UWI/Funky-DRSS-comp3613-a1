@@ -3,6 +3,8 @@ from flask_login import current_user
 
 from App.controllers.auth import authenticate, login_user, logout_user
 from App.controllers.user import create_user
+from App.controllers.student import *
+from App.controllers.review import *
 
 index_views = Blueprint("index_views", __name__, template_folder="../templates")
 
@@ -12,6 +14,22 @@ def index_page():
     if current_user.is_authenticated:
         return render_template("index.html")
     return redirect(url_for('index_views.login_page'))
+
+@index_views.route('/students', methods=['GET'])
+def student_manager_page():
+    students = get_all_students()
+    students_json = [student.toJSON() for student in students]
+    return render_template('studentmanager.html', students=students_json)
+
+@index_views.route('/reviews', methods=['GET'])
+def review_manager_page():
+    reviews = get_all_reviews()
+    reviews_json = [review.toJSON() for review in reviews]
+    return render_template('reviewmanager.html', reviews=reviews_json)
+
+@index_views.route('/student/<id>', methods=["GET"])
+def get_student_reviews_page():
+    reviews = get_upvotes_by_review()
 
 @index_views.route("/login", methods=['GET'])
 def login_page():

@@ -1,5 +1,5 @@
 /* required to keep content out of sidenav */
-.container {
+#content {
     padding-left: 150px;
     /*or 300*/
 }
@@ -8,7 +8,7 @@
 @media only screen and (max-width : 992px) {
 
     
-    .container
+    #content
     {
         padding-left: 0;
     }
