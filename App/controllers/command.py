@@ -1,5 +1,6 @@
 from App.models import Command, VoteCommand
 from App.database import db
+from sqlalchemy import and_
 
 def create_command():
     command = Command()
@@ -25,3 +26,19 @@ def get_all_vote_commands_json():
 def get_votes_by_staff(staff_id):
     votes = VoteCommand.query.filter_by(staff_id = staff_id)
     return votes
+
+def get_upvotes_by_review(review_id):
+    votes = VoteCommand.query.filter_by(review_id = review_id, vote_type = 1)
+    return [vote.toJSON() for vote in votes]
+
+def get_downvotes_by_review(review_id):
+    votes = VoteCommand.query.filter_by(review_id = review_id, vote_type = -1)
+    return votes
+
+def get_votes_by_review(review_id):
+    votes = VoteCommand.query.filter_by(review_id = review_id)
+    return votes
+
+def get_vote(id):
+    vote = VoteCommand.query.get(id)
+    return vote

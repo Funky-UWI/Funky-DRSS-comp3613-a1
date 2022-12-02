@@ -1,6 +1,9 @@
+# from App.controllers.command import get_votes_by_review
+# from App.controllers.review import get_upvotes_by_review
 from App.database import db
 from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.ext.mutable import MutableDict
+from App.models.votecommand import VoteCommand
 
 
 class Review(db.Model):
@@ -29,18 +32,20 @@ class Review(db.Model):
             }
         )
 
-    def get_num_upvotes(self,review_id):
+    def get_num_upvotes(self):
         num_upvotes=0
-        votecommands= VoteCommand.query.filter_by(review_id=review_id)
-        for votecommand in self.votecommands:
+        # votecommands = get_votes_by_review(review_id)
+        votecommands= VoteCommand.query.filter_by(review_id=self.id)
+        for votecommand in votecommands:
             if votecommand.vote_type==1:
                 num_upvotes+=1
         return num_upvotes
 
-    def get_num_downvotes(self,review_id):
+    def get_num_downvotes(self):
         num_downvotes=0
-        votecommands= VoteCommand.query.filter_by(review_id=review_id)
-        for votecommand in self.votecommands:
+        # votecommands = get_votes_by_review(review_id)
+        votecommands= VoteCommand.query.filter_by(review_id=self.id)
+        for votecommand in votecommands:
             if votecommand.vote_type==-1:
                 num_downvotes+=1
         return num_downvotes

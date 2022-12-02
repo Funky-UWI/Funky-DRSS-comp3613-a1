@@ -32,11 +32,16 @@ from App.controllers.review import (
     get_review_json,
     get_all_reviews,
     get_all_reviews_json,
-    upvote_review,
-    downvote_review,
-    vote_review
-    get_num_upvotes
-    get_num_downvotes
+    vote_review,
+    # get_upvotes_by_review,
+    # get_downvotes_by_review
+)
+
+from App.controllers.command import (
+    create_vote_command,
+    get_upvotes_by_review,
+    get_downvotes_by_review,
+    get_vote
 )
 
 from datetime import datetime
@@ -216,31 +221,45 @@ class ReviewUnitTests(unittest.TestCase):
         with self.subTest("No votes"):
             review = Review(1, 1, "good")
             self.assertEqual(
-                review.get_all_votes(), {"num_upvotes": 0, "num_downvotes": 0}
+                # review.get_all_votes(), {"num_upvotes": 0, "num_downvotes": 0}
+                review.get_num_upvotes(), 0
             )
 
         with self.subTest("One upvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "up")
+            # review.vote(1, "up")
+            # create_vote_command(review, staff=get_user(1), vote_type="upvote")
+            VoteCommand(review=review, staff=get_user(1), vote_type="upvote")
             self.assertEqual(
-                review.get_all_votes(), {1: "up", "num_upvotes": 1, "num_downvotes": 0}
+                # review.get_all_votes(), {1: "up", "num_upvotes": 1, "num_downvotes": 0}
+                review.get_num_upvotes(), 1
             )
 
         with self.subTest("One downvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "down")
+            # review.vote(1, "down")
+            # create_vote_command(review, staff=get_user(1), vote_type="downvote")
+            VoteCommand(review=review, staff=get_user(1), vote_type="downvote")
             self.assertEqual(
-                review.get_all_votes(),
-                {1: "down", "num_upvotes": 0, "num_downvotes": 1},
+                # review.get_all_votes(), {1: "down", "num_upvotes": 0, "num_downvotes": 1}
+                review.get_num_downvotes(), 1
             )
 
         with self.subTest("One upvote and one downvote"):
             review = Review(1, 1, "good")
-            review.vote(1, "up")
-            review.vote(2, "down")
+            # review.vote(1, "up")
+            # review.vote(2, "down")
+            # create_vote_command(review, staff=get_user(1), vote_type="upvote")
+            # create_vote_command(review, staff=get_user(1), vote_type="downvote")
+            VoteCommand(review=review, staff=get_user(1), vote_type="upvote")
+            VoteCommand(review=review, staff=get_user(1), vote_type="downvote")
             self.assertEqual(
-                review.get_all_votes(),
-                {1: "up", 2: "down", "num_upvotes": 1, "num_downvotes": 1},
+                # review.get_all_votes(), {1: "up", 2: "down", "num_upvotes": 1, "num_downvotes": 1}
+                review.get_num_upvotes(), 1
+            )
+            self.assertEqual(
+                # review.get_all_votes(), {1: "up", 2: "down", "num_upvotes": 1, "num_downvotes": 1}
+                review.get_num_downvotes(), 1
             )
 
 
@@ -422,12 +441,67 @@ class ReviewIntegrationTests(unittest.TestCase):
 
 # Integration tests for Vote model
 class VoteCommandIntegrationTests(unittest.TestCase):
-    def get_upvotes_by_review(self):    
-        upvotes=get_upvotes_by_review()
-        upvotes_json=get_upvotes_by_review_json()
-        assert upvotes_json==[review.toJSON() for review in reviews]
+    # staff = create_user("rob", "robpass", access=1)
+    staff = get_user(1)
+    review = create_review(student_id=1, user_id=1, text="good")
+
+    def test_create_votecommand(self):
+        with self.subTest("Upvote"):
+            date = datetime.today()
+            vote = create_vote_command(review=self.review, staff=self.staff, vote_type="upvote")
+            self.assertDictEqual(
+                vote.toJSON(),
+                {
+                    'id': vote.id,
+                    'vote_type': 1,
+                    'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
+                    'review': self.review.toJSON(),
+                    'staff': self.staff.toJSON()
+                }
+            )
+
+        with self.subTest("Downvote"):
+            date = datetime.today()
+            vote = create_vote_command(review=self.review, staff=self.staff, vote_type="downvote")
+            self.assertDictEqual(
+                vote.toJSON(),
+                {
+                    'id': vote.id,
+                    'vote_type': -1,
+                    'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
+                    'review': self.review.toJSON(),
+                    'staff': self.staff.toJSON()
+                }
+            )
+
+    def test_get_upvotes_by_review(self):    
+        review = create_review(student_id=1, user_id=1, text="good")
+        with self.subTest("0 votes"):
+            upvotes=get_upvotes_by_review(review.id)
+            upvotes_json = [upvote.toJSON() for upvote in upvotes]
+            self.assertEqual(upvotes, [])
+
+        with self.subTest("1 Upvote"):
+            date = datetime.today()
+            vote = create_vote_command(review=review, staff=self.staff, vote_type="upvote")
+            upvotes = get_upvotes_by_review(review.id)
+            self.assertListEqual(
+                upvotes,
+                [vote.toJSON()]
+            )
+
+        with self.subTest("2 Upvotes"):
+            date = datetime.today()
+            upvote1 = create_vote_command(review=review, staff=self.staff, vote_type="upvote")
+            upvote2 = create_vote_command(review=review, staff=self.staff, vote_type="upvote")
+            upvotes = get_upvotes_by_review(review.id)
+            self.assertListEqual(
+                upvotes,
+                [upvote1.toJSON()]
+            )
+
     
-    def get_downvotes_by_review(self):
-        downvotes=get_downvotes_by_review()
-        downvotes_json=get_downvotes_by_review_json()
-        assert downvotes_json==[review.toJSON() for review in reviews]
+    # def get_downvotes_by_review(self):
+    #     downvotes=get_downvotes_by_review()
+    #     downvotes_json=get_downvotes_by_review_json()
+    #     assert downvotes_json==[review.toJSON() for review in reviews]

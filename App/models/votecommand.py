@@ -16,7 +16,7 @@ class VoteCommand(Command):
     
     # vote_type = db.Column(db.Enum(VoteTypeEnum), nullable=False)
     vote_type = db.Column(db.Integer, nullable=False)
-    review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=True)
+    review_id = db.Column(db.Integer, db.ForeignKey("review.id"), nullable=False)
     # review = db.relationship("Review", back_populates="votecommand")
     review = db.relationship("Review")
 
