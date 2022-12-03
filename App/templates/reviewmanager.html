@@ -16,8 +16,12 @@
             </div>
             <div class="card-action">
                 <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded" method="post">
-                    <input type="submit" name="type" value="upvote" class="btn">
-                    <input type="submit" name="type" value="downvote" class="btn">
+                    <!-- <input type="submit" name="type" value="upvote" class="btn">
+                    <input type="submit" name="type" value="downvote" class="btn"> -->
+                    <button class="btn right" type="submit" name="type" value="downvote" class="btn"><span>{{
+                        review.num_downvotes }} </span><i class="material-icons right">thumb_down</i></button>
+                    <button class="btn right" type="submit" name="type" value="upvote" class="btn"><span>{{
+                        review.num_upvotes }} </span><i class="material-icons right">thumb_up</i></button>
                 </form>
             </div>
         </div>
