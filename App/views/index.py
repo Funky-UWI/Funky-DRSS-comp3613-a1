@@ -74,6 +74,13 @@ def delete_student_route(id):
     reviews_json = [review.toJSON() for review in reviews]
     return student_manager_page()
 
+@index_views.route('/student/<id>', methods=["PUT"])
+@login_required
+def update_student_route(id):
+    data = request.json
+    update_student(id, data['name'], data['programme'], data['faculty'])
+    return student_manager_page()
+
 @index_views.route('/student', methods=["POST"])
 @login_required
 def post_new_student():
