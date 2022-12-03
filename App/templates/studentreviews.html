@@ -5,12 +5,12 @@
 {{ super() }}
 
 {% block content %}
-
+<h2>{{student.name }}'s Reviews </h2>
 <div class="colomn">
     {% for review in reviews %}
     
     <div id="{{ review.id }}" class="col s12 m4">
-        <div class="card blue-grey darken-1">
+        <div class="card small grey lighten-4">
             <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded"
                 method="post">
                 <!-- <a class="btn right"><span>{{ review.num_downvotes }} </span><i
@@ -22,8 +22,8 @@
                 <button class="btn right" type="submit" name="type" value="upvote" class="btn"><span>{{
                         review.num_upvotes }} </span><i class="material-icons right">thumb_up</i></button>
             </form>
-            <div class="card-content white-text">
-                <span class="card-title"> {{ review.student.name }} Review </span>
+            <div class="card-content black-text">
+                <!-- <span class="card-title">  </span> -->
                 <p>review: {{ review.text }}</p>
                 <!-- <p>{{ review.num_upvotes }}</p> -->
                 <P>Karma: {{ review.karma }}</P>
