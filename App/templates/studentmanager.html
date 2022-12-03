@@ -16,12 +16,30 @@
                 <P>{{ student.karma }}</P>
             </div>
             <div class="card-action">
-                <a href="/newreview">Review</a>
+                <a class="modal-trigger" href="#modal1" onclick="">Review</a>
                 <a href="/student/{{ student.id }}">See Reviews</a>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
+
+<!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <form target="_self" action="/newreview?student_id=" method="post">
+    <div class="modal-content">
+      <h4>Review</h4>
+        <div class="input-field">
+            <input placeholder="Review Text" id="review_text" type="text" class="validate">
+            <label for="review_text">Review</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!-- <a href="#!" class="modal-close waves-effect waves-green btn-flat">Post</a> -->
+        <button type="submit" class="btn-flat">Post</button>
+    </div>
+</form>
+  </div>
 
 {% endblock %}

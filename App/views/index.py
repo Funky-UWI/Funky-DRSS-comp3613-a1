@@ -23,13 +23,19 @@ def student_manager_page():
 
 @index_views.route('/reviews', methods=['GET'])
 def review_manager_page():
-    reviews = get_all_reviews()
+    reviews = get_reviews_by_user(current_user.id)
     reviews_json = [review.toJSON() for review in reviews]
     return render_template('reviewmanager.html', reviews=reviews_json)
 
 @index_views.route('/student/<id>', methods=["GET"])
-def get_student_reviews_page():
-    reviews = get_upvotes_by_review()
+def get_student_reviews_page(id):
+    reviews = get_reviews_by_student(id)
+    reviews_json = [review.toJSON() for review in reviews]
+    return render_template('studentreviews.html', reviews=reviews_json)
+
+@index_views.route('/newreview', methods=["GET"])
+def new_review_page():
+    return 400
 
 @index_views.route("/login", methods=['GET'])
 def login_page():
