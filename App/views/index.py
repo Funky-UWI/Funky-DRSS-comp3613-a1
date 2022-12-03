@@ -62,6 +62,13 @@ def new_review():
     reviews_json = [review.toJSON() for review in reviews]
     return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
 
+@index_views.route('/review/<id>', methods=['POST'])
+@login_required
+def edit_review(id):
+    data = request.form
+    update_review(id, data.get("review_text"))
+    return review_manager_page()
+
 @index_views.route('/student/<id>', methods=["GET"])
 @login_required
 def get_student_reviews_page(id):
