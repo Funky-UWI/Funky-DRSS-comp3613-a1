@@ -1,4 +1,6 @@
 from App.models import Command, VoteCommand
+from App.controllers.review import *
+from App.controllers.user import *
 from App.database import db
 from sqlalchemy import and_
 
@@ -13,6 +15,14 @@ def create_vote_command(review, staff, vote_type):
     db.session.add(command)
     db.session.commit()
     return command
+
+# def create_vote_command(review_id, staff_id, vote_type):
+#     review = get_review(review_id)
+#     staff = get_user(staff_id)
+#     command = VoteCommand(review, staff, vote_type)
+#     db.session.add(command)
+#     db.session.commit()
+#     return command
 
 def get_all_vote_commands():
     commands = VoteCommand.query.all()

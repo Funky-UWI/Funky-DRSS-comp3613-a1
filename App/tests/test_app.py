@@ -137,6 +137,7 @@ class StudentUnitTests(unittest.TestCase):
             mockReview1.vote(1, "down")
             student.reviews.append(mockReview1)
             self.assertEqual(student.get_karma(), -1)
+        # with self.subTest("No votes"):
 
 
 # Unit tests for Review model
@@ -321,15 +322,20 @@ class VoteCommandUnitTests(unittest.TestCase):
 def empty_db():
     app.config.update({"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db"})
     create_db(app)
+    # ctx = app.app_context()
+    # ctx.push()
     yield app.test_client()
+    # delete_db(app)
     os.unlink(os.getcwd() + "/App/test.db")
+    # ctx.pop()
 
 
 # Integration tests for User model
 class UserIntegrationTests(unittest.TestCase):
     def test_authenticate(self):
-        user = create_user("bob", "bobpass")
-        assert authenticate("bob", "bobpass") is not None
+        test_user = create_user("job", "bobpass")
+        test_user = authenticate("job", "bobpass")
+        self.assertIsNotNone(test_user)
 
     def test_create_admin(self):
         test_admin = create_user("rick", "rickpass", 2)

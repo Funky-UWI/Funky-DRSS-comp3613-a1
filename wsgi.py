@@ -167,3 +167,30 @@ def votecommand_tests_command(type):
 
 
 app.cli.add_command(test)
+
+
+
+"""
+Review Commands
+"""
+
+# Commands can be organized using groups
+
+# create a group, it would be the first argument of the comand
+# eg : flask user <command>
+review_cli = AppGroup("review", help="review object commands")
+
+
+# this command will be : flask user create bob bobpass
+
+
+@review_cli.command("list", help="Lists reviews in the database")
+@click.argument("format", default="string")
+def list_user_command(format):
+    if format == "string":
+        print(get_all_reviews())
+    else:
+        print(get_all_reviews_json())
+
+
+app.cli.add_command(review_cli)  # add the group to the cli
