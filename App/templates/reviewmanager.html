@@ -5,6 +5,15 @@
 {{ super() }}
 
 {% block content %}
+<h2>Review Manager Page </h2>
+
+<div class="edit review">
+    <a href="#" class="modal-trigger">
+        <p href="#"  class="btn deep-purple lighten-2" > <span>edit review </span><i class="material-icons right ">edit</i> </p>
+    </a>
+        <!-- onclick="document.querySelector('#addstudentform').submit()" -->
+</div>
+
 <div class="column">
     {% for review in reviews %}
     <div class="col s12 m4">
