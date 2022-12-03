@@ -134,7 +134,9 @@ def vote_review_action(review_id):
     reviews = get_reviews_by_user(current_user.id)
     reviews_json = [review.toJSON() for review in reviews]
     # return render_template('reviewmanager.html', reviews=reviews_json)
-    return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
+    # return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
+    # return redirect(url_for("index_views.get_student_reviews_page", reviews=reviews_json))
+    return get_student_reviews_page(review.student_id)
 
 # @index_views.context_processor
 # def get_user_reviews():
