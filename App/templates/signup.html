@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>{% block title %}{% endblock %}</title>
+    <title>Signup</title>
   </head>
   <body>
 
-    <nav class="purple">
+    <nav class="purple" style="height: 130px;">
         <div class="nav-wrapper">
           <div class="nav-wrapper">
-            <a href="/login" class="brand-logo center">Login</a>
+            <h3 class="brand-logo center" style="font-size:80px;">SignUp Page</h3>
           </div>
         </div>
       </nav>
@@ -36,9 +36,9 @@
       {% endwith %}
 
 
-      <div class="center">
-        <h1>Registration</h1>
-        <form action='/signup' method="post" enctype="application/x-www-form-urlencoded" class="container">
+      <div class="center" style =" margin-top:40px; margin-left: 40px;margin-right: 40px;height: 80vh;border-radius: 70px;border: 2px solid black;padding-top:50px;">
+        <i class="material-icons" style="font-size:100px;">school</i>
+        <form action='/signup' method="post" enctype="application/x-www-form-urlencoded" class="container"style="padding-top:50px;">
 
             <div class="row">
                 <div class="input_field">
@@ -55,7 +55,7 @@
             </div>
 
             <!-- <div class="pass">Forget Password?</div> -->
-            <input type="Submit" value="signup" class="btn orange darken-4 row">
+            <input type="Submit" value="signup" class="btn orange darken-4 row" style="width: 600px;">
             <div class="signup_link">
                 Already have an account? <a href="/login">Login</a>
 
