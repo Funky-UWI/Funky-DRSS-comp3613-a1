@@ -55,6 +55,13 @@ def get_student_reviews_page(id):
     reviews_json = [review.toJSON() for review in reviews]
     return render_template('studentreviews.html', reviews=reviews_json)
 
+@index_views.route('/student', methods=["POST"])
+@login_required
+def post_new_student():
+    data = request.form
+    student = create_student(data['name'], data['programme'], data['faculty'])
+    return redirect(url_for("index_views.student_manager_page"))
+
 @index_views.route('/newreview', methods=["GET"])
 @login_required
 def new_review_page():
