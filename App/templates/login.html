@@ -13,10 +13,10 @@
   </head>
   <body>
 
-    <nav class="purple">
+    <nav class="purple" style="height: 130px;">
         <div class="nav-wrapper">
           <div class="nav-wrapper">
-            <a href="/login" class="brand-logo center">Login</a>
+            <h3 href="/login" class="brand-logo center"style="font-size:80px;">Login Page</h3>
           </div>
         </div>
       </nav>
@@ -35,21 +35,23 @@
       {% endif %}
       {% endwith %}
 
-      <div class="center" style="border:2px;border-color: black;">
-        <h1>Login</h1>
-        <form action="/login" method="post">
-            <div class="txt_fld">
+      <div class="center" style =" margin-top:40px; margin-left: 40px;margin-right: 40px;height: 80vh;border-radius: 70px;border: 2px solid black;padding-top:50px;">
+        <!-- <h1>Login</h1> -->
+        <i class="material-icons" style="font-size:100px;">school</i>
+        <form action="/login" method="post" enctype="application/x-www-form-urlencoded" class="container"style="padding-top:50px;">
+
+            <div class="row">
                 <input type="text" id="username" name="username" required class="black-text center-align" value="rob">
                 <span></span>
                 <label>Enter Username</label>
             </div>
-            <div class="txt_fld">
+            <div class="row">
                 <input type="password" id="password" name="password" required class="black-text center-align" value="robpass">
                 <span></span>
                 <label>Enter Password</label>
             </div>
             <div class="pass">Forget Password?</div>
-            <input type="Submit" value="Login" class="btn orange darken-4">
+            <input type="Submit" value="Login" class="btn orange darken-4 row" style="width: 600px;">
             <div class="signup_link">
                 Not a member yet? <a href="/signup">Signup</a>
   
