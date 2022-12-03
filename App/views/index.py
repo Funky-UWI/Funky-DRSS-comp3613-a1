@@ -66,6 +66,14 @@ def get_student_reviews_page(id):
     reviews_json = [review.toJSON() for review in reviews]
     return render_template('studentreviews.html', reviews=reviews_json)
 
+@index_views.route('/student/<id>', methods=["DELETE"])
+@login_required
+def delete_student_route(id):
+    delete_student(id)
+    reviews = get_reviews_by_student(id)
+    reviews_json = [review.toJSON() for review in reviews]
+    return student_manager_page()
+
 @index_views.route('/student', methods=["POST"])
 @login_required
 def post_new_student():

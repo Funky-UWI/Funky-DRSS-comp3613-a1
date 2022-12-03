@@ -32,7 +32,7 @@
     {% for student in students %}
     <div class="col s12 m4">
         <div class="card small blue-grey darken-1">
-            <a href="#" ><i class="material-icons red-text">delete</i> </a>
+            <a href="#" onclick="deleteStudent('{{ student.id }}')" ><i class="material-icons red-text">delete</i> </a>
             <a href="#" ><i class="material-icons right ">edit</i> </a>
             <div class="card-content white-text">
                 <span class="card-title ">Student Name: {{ student.name }}</span>
@@ -99,4 +99,13 @@
 </form>
   </div>
 
+
+  <script>
+    async function deleteStudent(id) {
+        await fetch("/student/"+id, {
+            'method': 'delete'
+        })
+        window.location.href = ''
+    }
+</script>
 {% endblock %}
