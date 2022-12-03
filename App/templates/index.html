@@ -17,8 +17,8 @@
 <div class="row">
     {% for review in reviews %}
     <div class="col s12 m4">
-        <div class="card small blue-grey darken-1">
-            <div class="card-content white-text">
+        <div class="card small grey lighten-4">
+            <div class="card-content black-text">
                 <span class="card-title">student name: {{ review.student.name }}</span>
                 <p>review: {{ review.text }}</p>
                 <P>karma: {{ review.karma }}</P>
@@ -28,9 +28,9 @@
                     method="post">
                     <!-- <input type="submit" name="type" value="upvote" class="btn">
                     <input type="submit" name="type" value="downvote" class="btn"> -->
-                    <button class="btn right" type="submit" name="type" value="downvote" class="btn"><span>{{
+                    <button class="btn indigo lighten-3 right" type="submit" name="type" value="downvote" class="btn"><span>{{
                             review.num_downvotes }} </span><i class="material-icons right">thumb_down</i></button>
-                    <button class="btn right" type="submit" name="type" value="upvote" class="btn"><span>{{
+                    <button class="btn indigo lighten-3 right" type="submit" name="type" value="upvote" class="btn"><span>{{
                             review.num_upvotes }} </span><i class="material-icons right">thumb_up</i></button>
                 </form>
             </div>
