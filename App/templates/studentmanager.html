@@ -35,9 +35,7 @@
             <a href="#" onclick="deleteStudent('{{ student.id }}')" ><i class="material-icons red-text">delete</i> </a>
             <a href="#edit_student_modal" 
             class="modal-trigger"
-            onclick="setStudentEdit(
-                '{{student.id}}', '{{student.name}}', '{{student.faculty}}', '{{student.programme}}')"
-            ><i class="material-icons right ">edit</i>  </a>
+            ><i class="material-icons right ">edit</i> </a>
             <div class="card-content white-text">
                 <span class="card-title ">Student Name: {{ student.name }}</span>
                 <p>faculty: {{ student.faculty }}</p>
@@ -46,8 +44,9 @@
             </div>
             <div class="card-action">
                 <!-- <a class="modal-trigger" href="#review_modal" onclick="setStudentID('{{ student.id }}')">Review</a> -->
-                <a class="modal-trigger" href="#review_modal" onclick="setStudentID('{{student.id}}')">Review</a>
-                <a href="/student/{{ student.id }}">See Reviews</a>
+               
+                <a class="modal-trigger  tooltipped" data-tooltip="add reviews" href="#review_modal" onclick="setStudentID('{{student.id}}')"><i class="material-icons">rate_review </i></a>
+                <a class=" tooltipped right" data-position="buttom" data-tooltip="see reviews" href="/student/{{ student.id }}"><i class="material-icons right">remove_red_eye </i></a>
             </div>
         </div>
     </div>
@@ -59,18 +58,11 @@
         form = document.querySelector('#reviewform')
         form.action = '/review?student_id=' + id
     }
-    function setStudentEdit(student_id, student_name, student_faculty, student_programme) {
-        document.querySelector("#edit_name").value = student_name
-        document.querySelector("#edit_faculty").value = student_faculty
-        document.querySelector("#edit_programme").value = student_programme
-        form = document.querySelector('#editstudentform')
-        form.action = '/student/' + student_id
-    }
 </script>
 
 <!-- Review Modal Structure -->
 <div id="review_modal" class="modal">
-    <form id="reviewform" target="_self" action="/review?student_id=" method="post">
+    <form id="reviewform" target="_self" action="/review?student_id={{ student_id }}" method="post">
     <div class="modal-content">
       <h4>Review</h4>
         <div class="input-field">
@@ -112,19 +104,19 @@
 
   <!-- Edit Student Modal Structure -->
 <div id="edit_student_modal" class="modal">
-    <form id="editstudentform" action="/student/" method="post">
+    <form action="javascript:updateStudent()">
     <div class="modal-content">
       <h4>Edit Student</h4>
         <div class="input-field">
-            <input placeholder="Student Name" id="edit_name" name="edit_name" type="text" class="validate">
+            <input placeholder="Student Name" id="name" name="name" type="text" class="validate">
             <label for="student_name">Name</label>
         </div>
         <div class="input-field">
-            <input placeholder="Faculty" id="edit_faculty" name="edit_faculty" type="text" class="validate">
+            <input placeholder="Faculty" id="faculty" name="faculty" type="text" class="validate">
             <label for="faculty">Faculty</label>
         </div>
         <div class="input-field">
-            <input placeholder="Programme" id="edit_programme" name="edit_programme" type="text" class="validate">
+            <input placeholder="Programme" id="programme" name="programme" type="text" class="validate">
             <label for="programme">Programme</label>
         </div>
     </div>
