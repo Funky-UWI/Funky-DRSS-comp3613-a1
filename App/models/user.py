@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
     def __init__(self, username, password, access=ACCESS["admin"]):
         self.username = username
         self.set_password(password)
-        self.access = access
+        self.access = 2
 
     def is_admin(self):
         return self.access == ACCESS["admin"]
