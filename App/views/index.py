@@ -48,6 +48,17 @@ def review_manager_page():
     reviews_json = [review.toJSON() for review in reviews]
     return render_template('reviewmanager.html', reviews=reviews_json)
 
+@index_views.route('/review', methods=['POST'])   #/review?student_id=1
+@login_required
+def new_review():
+    student_id = request.args.get('student_id')
+    form = request.form
+    review = create_review(student_id=student_id, user_id=current_user.id, text=form.get('review_text'))
+
+    reviews = get_reviews_by_user(current_user.id)
+    reviews_json = [review.toJSON() for review in reviews]
+    return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
+
 @index_views.route('/student/<id>', methods=["GET"])
 @login_required
 def get_student_reviews_page(id):

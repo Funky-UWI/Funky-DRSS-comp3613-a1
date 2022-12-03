@@ -41,7 +41,8 @@
                 <P>Karma Rating: {{ student.karma }}</P>
             </div>
             <div class="card-action">
-                <a class="modal-trigger" href="#review_modal" onclick="">Review</a>
+                <!-- <a class="modal-trigger" href="#review_modal" onclick="setStudentID('{{ student.id }}')">Review</a> -->
+                <a class="modal-trigger" href="#review_modal" onclick="setStudentID('{{student.id}}')">Review</a>
                 <a href="/student/{{ student.id }}">See Reviews</a>
             </div>
         </div>
@@ -49,14 +50,20 @@
     {% endfor %}
 </div>
 
+<script type="text/javascript">
+    function setStudentID(id) {
+        form = document.querySelector('#reviewform')
+        form.action = '/review?student_id=' + id
+    }
+</script>
 
 <!-- Modal Structure -->
 <div id="review_modal" class="modal">
-    <form target="_self" action="/newreview?student_id=" method="post">
+    <form id="reviewform" target="_self" action="/review?student_id={{ student_id }}" method="post">
     <div class="modal-content">
       <h4>Review</h4>
         <div class="input-field">
-            <input placeholder="Review Text" id="review_text" type="text" class="validate">
+            <input placeholder="Review Text" name="review_text" id="review_text" type="text" class="validate">
             <label for="review_text">Review</label>
         </div>
     </div>
