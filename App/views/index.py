@@ -88,10 +88,6 @@ def post_new_student():
     student = create_student(data['name'], data['programme'], data['faculty'])
     return redirect(url_for("index_views.student_manager_page"))
 
-@index_views.route('/newreview', methods=["GET"])
-@login_required
-def new_review_page():
-    return 400
 
 @index_views.route("/login", methods=['GET'])
 def login_page():
