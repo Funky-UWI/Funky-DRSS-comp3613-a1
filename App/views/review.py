@@ -85,7 +85,8 @@ def vote_review_action(review_id):
     # votes = get_votes_by_staff(staff_id=review.user_id)
     # return jsonify([vote.toJSON() for vote in votes])
 
-    staff = get_user(review.user_id)
+    # staff = get_user(review.user_id)
+    staff = current_identity
     vote = create_vote_command(review=review, staff=staff, vote_type=vote_type)
 
     return jsonify(vote.toJSON())

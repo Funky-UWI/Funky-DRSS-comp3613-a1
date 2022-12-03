@@ -12,7 +12,9 @@ index_views = Blueprint("index_views", __name__, template_folder="../templates")
 @index_views.route("/", methods=["GET"])
 def index_page():
     if current_user.is_authenticated:
-        return render_template("index.html")
+        reviews = get_all_reviews()
+        reviews_json = [review.toJSON() for review in reviews]
+        return render_template("index.html", reviews=reviews_json)
     return redirect(url_for('index_views.login_page'))
 
 @index_views.route('/students', methods=['GET'])
