@@ -46,6 +46,9 @@ def review_manager_page():
     #         else:
     #             reviews = get_all_reviews()
     reviews_json = [review.toJSON() for review in reviews]
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
+
     return render_template('reviewmanager.html', reviews=reviews_json)
 
 @index_views.route('/review', methods=['POST'])   #/review?student_id=1
