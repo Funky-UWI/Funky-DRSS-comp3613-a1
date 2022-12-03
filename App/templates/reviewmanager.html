@@ -16,12 +16,14 @@
                 <P>{{ review.karma }}</P>
             </div>
             <div class="card-action">
-                <a href="#">This is a link</a>
-                <a href="#">This is a link</a>
+                <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded" method="post">
+                    <input type="submit" name="type" value="upvote" class="btn">
+                    <input type="submit" name="type" value="downvote" class="btn">
+                </form>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
-
+{{now}}
 {% endblock %}

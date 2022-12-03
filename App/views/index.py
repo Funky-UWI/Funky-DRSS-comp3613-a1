@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, request, send_from_directory, url_for
+from flask import Blueprint, Response, flash, redirect, render_template, request, send_from_directory, url_for
 from flask_login import current_user, login_required
 
 from App.controllers.auth import authenticate, login_user, logout_user
@@ -84,6 +84,41 @@ def login():
         flash(str(e))
         return redirect(url_for("index_views.login_page"))
     return redirect(url_for('index_views.index_page'))
+
+@index_views.route("/reviews/<int:review_id>/vote", methods=["POST"])
+@login_required
+def vote_review_action(review_id):
+    # vote_type = request.args.get("type")
+    vote_type = request.form.get("type")
+
+    if not type:
+        flash("No specified vote type. Upvote or downvote.")
+        return Response(status=404)
+
+    review = get_review(review_id)
+    if not review:
+        flash("Review does not exist.")
+        return Response(status=404)
+
+    # # staff should not be able to vote more than once, new votes override older ones
+    # votes = get_votes_by_staff(staff_id=review.user_id)
+    # return jsonify([vote.toJSON() for vote in votes])
+
+    # staff = get_user(review.user_id)
+    staff = current_user
+    vote = create_vote_command(review=review, staff=staff, vote_type=vote_type)
+
+    # return jsonify(vote.toJSON())
+    reviews = get_reviews_by_user(current_user.id)
+    reviews_json = [review.toJSON() for review in reviews]
+    # return render_template('reviewmanager.html', reviews=reviews_json)
+    return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
+
+# @index_views.context_processor
+# def get_user_reviews():
+#     reviews = get_reviews_by_user(current_user.id)
+#     reviews_json = [review.toJSON() for review in reviews]
+#     return {'reviews': reviews_json}
 
 @index_views.route("/logout", methods=["GET"])
 def logout_page():
