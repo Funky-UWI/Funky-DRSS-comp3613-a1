@@ -80,7 +80,7 @@ def get_student_reviews_page(id):
     for review in reviews_json:
         review['student'] = get_student(review['student_id']).toJSON()
         
-    return render_template('studentreviews.html', reviews=reviews_json)
+    return render_template('studentreviews.html', reviews=reviews_json, student=get_student(review['student_id']).toJSON())
 
 
 
