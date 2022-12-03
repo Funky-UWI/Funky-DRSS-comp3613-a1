@@ -18,24 +18,56 @@
     {% for review in reviews %}
     <div class="col s12 m4">
         <div class="card small blue-grey darken-1">
-            <a href="#edit_student_modal" class="modal-trigger"><i class="material-icons right ">edit</i> </a>
+            <a 
+                href="#review_modal" 
+                class="modal-trigger"
+                onclick="setReviewEdit(
+                '{{review.id}}', '{{review.text}}')"
+            ><i class="material-icons right ">edit</i> </a>
             <div class="card-content white-text">
                 <span class="card-title">student name: {{ review.student.name }}</span>
                 <p>review: {{ review.text }}</p>
                 <P>karma: {{ review.karma }}</P>
             </div>
             <div class="card-action">
-                <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded" method="post">
+                <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded"
+                    method="post">
                     <!-- <input type="submit" name="type" value="upvote" class="btn">
                     <input type="submit" name="type" value="downvote" class="btn"> -->
                     <button class="btn right" type="submit" name="type" value="downvote" class="btn"><span>{{
-                        review.num_downvotes }} </span><i class="material-icons right">thumb_down</i></button>
+                            review.num_downvotes }} </span><i class="material-icons right">thumb_down</i></button>
                     <button class="btn right" type="submit" name="type" value="upvote" class="btn"><span>{{
-                        review.num_upvotes }} </span><i class="material-icons right">thumb_up</i></button>
+                            review.num_upvotes }} </span><i class="material-icons right">thumb_up</i></button>
                 </form>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
+
+
+<!-- Review Modal Structure -->
+<div id="review_modal" class="modal">
+    <form id="reviewform" target="_self" action="/review/" method="post">
+        <div class="modal-content">
+            <h4>Review</h4>
+            <div class="input-field">
+                <input placeholder="Review Text" name="review_text" id="review_text" type="text" class="validate">
+                <label for="review_text">Review</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!-- <a href="#!" class="modal-close waves-effect waves-green btn-flat">Post</a> -->
+            <button type="submit" class="btn-flat">Post</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function setReviewEdit(review_id, review_text) {
+        document.querySelector("#review_text").value = review_text
+        form = document.querySelector('#reviewform')
+        form.action = '/review/' + review_id
+    }
+</script>
 {% endblock %}

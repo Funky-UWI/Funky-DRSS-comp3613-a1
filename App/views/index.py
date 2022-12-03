@@ -15,6 +15,8 @@ def index_page():
     if current_user.is_authenticated:
         reviews = get_all_reviews()
         reviews_json = [review.toJSON() for review in reviews]
+        for review in reviews_json:
+            review['student'] = get_student(review['student_id']).toJSON()
         return render_template("index.html", reviews=reviews_json)
     return redirect(url_for('index_views.login_page'))
 
@@ -62,12 +64,25 @@ def new_review():
     reviews_json = [review.toJSON() for review in reviews]
     return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
 
+@index_views.route('/review/<id>', methods=['POST'])
+@login_required
+def edit_review(id):
+    data = request.form
+    update_review(id, data.get("review_text"))
+    return review_manager_page()
+
 @index_views.route('/student/<id>', methods=["GET"])
 @login_required
 def get_student_reviews_page(id):
     reviews = get_reviews_by_student(id)
+    # reviews_json = [review.toJSON() for review in reviews]
     reviews_json = [review.toJSON() for review in reviews]
-    return render_template('studentreviews.html', reviews=reviews_json)
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
+        
+    return render_template('studentreviews.html', reviews=reviews_json, student=get_student(review['student_id']).toJSON())
+
+
 
 @index_views.route('/student/<id>', methods=["DELETE"])
 @login_required
