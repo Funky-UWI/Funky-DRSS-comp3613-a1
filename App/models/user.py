@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
         "Review", backref="user", lazy=True, cascade="all, delete-orphan"
     )
 
-    def __init__(self, username, password, access=ACCESS["user"]):
+    def __init__(self, username, password, access=ACCESS["admin"]):
         self.username = username
         self.set_password(password)
         self.access = access
