@@ -15,6 +15,8 @@ def index_page():
     if current_user.is_authenticated:
         reviews = get_all_reviews()
         reviews_json = [review.toJSON() for review in reviews]
+        for review in reviews_json:
+            review['student'] = get_student(review['student_id']).toJSON()
         return render_template("index.html", reviews=reviews_json)
     return redirect(url_for('index_views.login_page'))
 
