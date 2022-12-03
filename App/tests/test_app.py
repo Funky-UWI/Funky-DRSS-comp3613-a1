@@ -44,6 +44,8 @@ from App.controllers.command import (
     get_vote
 )
 
+from App.database import db
+
 from datetime import datetime
 
 from wsgi import app
@@ -119,25 +121,32 @@ class StudentUnitTests(unittest.TestCase):
             },
         )
 
-    def test_student_karma(self):
-        with self.subTest("No reviews"):
-            student = Student("bob", "FST", "Computer Science")
-            self.assertEqual(student.get_karma(), 0)
+    # def test_student_karma(self):
+    #     with self.subTest("No reviews"):
+    #         student = Student("bob", "FST", "Computer Science")
+    #         self.assertEqual(student.get_karma(), 0)
 
-        with self.subTest("No reviews"):
-            student = Student("bob", "FST", "Computer Science")
-            mockReview = Review(1, 1, "good")
-            mockReview.vote(1, "up")
-            student.reviews.append(mockReview)
-            self.assertEqual(student.get_karma(), 1)
+    #     with self.subTest("1 review"):
+    #         student = Student("bob", "FST", "Computer Science")
+    #         mockReview = Review(1, student.id, "good")
+    #         # mockReview.vote(1, "up")
+    #         vote = VoteCommand(mockReview, get_user(1), "upvote")
+    #         db.session.add(vote)
+    #         db.session.commit()
 
-        with self.subTest("One negative review"):
-            student = Student("bob", "FST", "Computer Science")
-            mockReview1 = Review(1, 1, "good")
-            mockReview1.vote(1, "down")
-            student.reviews.append(mockReview1)
-            self.assertEqual(student.get_karma(), -1)
-        # with self.subTest("No votes"):
+    #         student.reviews.append(mockReview)
+    #         self.assertEqual(student.get_karma(), 1)
+
+    #     with self.subTest("One negative review"):
+    #         student = Student("bob", "FST", "Computer Science")
+    #         mockReview1 = Review(1, student.id, "good")
+    #         # mockReview1.vote(1, "down")
+    #         vote = VoteCommand(mockReview, get_user(1), "downvote")
+    #         db.session.add(vote)
+    #         db.session.commit()
+
+    #         student.reviews.append(mockReview1)
+    #         self.assertEqual(student.get_karma(), -1)
 
 
 # Unit tests for Review model
@@ -411,6 +420,24 @@ class StudentIntegrationTests(unittest.TestCase):
         sid = student.id
         delete_student(sid)
         assert get_student(sid) is None
+
+    def test_student_karma(self):
+        with self.subTest("No votes"):
+            student = create_student("bob", "fst", "cs")
+            review = create_review(student_id=student.id, user_id=1, text="good")
+            self.assertEqual(student.get_karma(), 0)
+
+        with self.subTest("1 upvote"):
+            student = create_student("bob", "fst", "cs")
+            review = create_review(student_id=student.id, user_id=1, text="good")
+            vote = create_vote_command(review, get_user(1), "upvote")
+            self.assertEqual(student.get_karma(), 1)
+
+        with self.subTest("1 downvote"):
+            student = create_student("bob", "fst", "cs")
+            review = create_review(student_id=student.id, user_id=1, text="good")
+            vote = create_vote_command(review, get_user(1), "downvote")
+            self.assertEqual(student.get_karma(), -1)
 
 
 # Integration tests for Review model
