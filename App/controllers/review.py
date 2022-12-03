@@ -81,7 +81,6 @@ def get_reviews_by_student(student_id):
     reviews = Review.query.filter_by(student_id=student_id).all()
     return reviews
 
-
 # Returns the reviews posted by a user given the user id
 def get_reviews_by_user(user_id):
     reviews = Review.query.filter_by(user_id=user_id).all()

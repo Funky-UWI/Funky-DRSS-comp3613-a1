@@ -14,7 +14,11 @@ def create_student(name, programme, faculty):
 
 # Gets a student by their name
 def get_students_by_name(name):
-    return Student.query.filter_by(name=name).all()
+    # students = Student.query.filter_by(name=name).all()
+    students = Student.query.filter(Student.name.contains(name))
+    if not students:
+        return []
+    return students
 
 
 # Gets a student by their id

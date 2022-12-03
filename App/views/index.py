@@ -1,5 +1,5 @@
 from flask import Blueprint, flash, redirect, render_template, request, send_from_directory, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 from App.controllers.auth import authenticate, login_user, logout_user
 from App.controllers.user import create_user
@@ -10,6 +10,7 @@ index_views = Blueprint("index_views", __name__, template_folder="../templates")
 
 
 @index_views.route("/", methods=["GET"])
+@login_required
 def index_page():
     if current_user.is_authenticated:
         reviews = get_all_reviews()
@@ -18,24 +19,44 @@ def index_page():
     return redirect(url_for('index_views.login_page'))
 
 @index_views.route('/students', methods=['GET'])
+@login_required
 def student_manager_page():
     students = get_all_students()
+    # search function
+    query = request.args
+    if query:
+        if 'search' in query:
+            if query['search'] != "":
+                students = get_students_by_name(query['search'])
+            else:
+                students = get_all_students()
     students_json = [student.toJSON() for student in students]
     return render_template('studentmanager.html', students=students_json)
 
 @index_views.route('/reviews', methods=['GET'])
+@login_required
 def review_manager_page():
     reviews = get_reviews_by_user(current_user.id)
+    # search function
+    # query = request.args
+    # if query:
+    #     if 'search' in query:
+    #         if query['search'] != "":
+    #             reviews = get_reviews_by_name(query['search'])
+    #         else:
+    #             reviews = get_all_reviews()
     reviews_json = [review.toJSON() for review in reviews]
     return render_template('reviewmanager.html', reviews=reviews_json)
 
 @index_views.route('/student/<id>', methods=["GET"])
+@login_required
 def get_student_reviews_page(id):
     reviews = get_reviews_by_student(id)
     reviews_json = [review.toJSON() for review in reviews]
     return render_template('studentreviews.html', reviews=reviews_json)
 
 @index_views.route('/newreview', methods=["GET"])
+@login_required
 def new_review_page():
     return 400
 
