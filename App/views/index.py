@@ -77,11 +77,11 @@ def delete_student_route(id):
     reviews_json = [review.toJSON() for review in reviews]
     return student_manager_page()
 
-@index_views.route('/student/<id>', methods=["PUT"])
+@index_views.route('/student/<id>', methods=["POST"])
 @login_required
 def update_student_route(id):
-    data = request.json
-    update_student(id, data['name'], data['programme'], data['faculty'])
+    data = request.form
+    update_student(id, data['edit_name'], data['edit_programme'], data['edit_faculty'])
     return student_manager_page()
 
 @index_views.route('/student', methods=["POST"])
