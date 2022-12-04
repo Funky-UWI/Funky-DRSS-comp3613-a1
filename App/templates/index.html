@@ -22,6 +22,7 @@
                 <span class="card-title">{{ review.student.name }}</span>
                 <p>review: {{ review.text }}</p>
                 <P>karma: {{ review.karma }}</P>
+                <p>staff: {{review.user.username}}</p>
             </div>
             <div class="card-action">
                 <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded"

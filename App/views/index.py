@@ -17,6 +17,7 @@ def index_page():
         reviews_json = [review.toJSON() for review in reviews]
         for review in reviews_json:
             review['student'] = get_student(review['student_id']).toJSON()
+            review['user']=get_user(review['user_id']).toJSON()
         return render_template("index.html", reviews=reviews_json)
     return redirect(url_for('index_views.login_page'))
 
@@ -50,6 +51,7 @@ def review_manager_page():
     reviews_json = [review.toJSON() for review in reviews]
     for review in reviews_json:
         review['student'] = get_student(review['student_id']).toJSON()
+        review['user']=get_user(review['user_id']).toJSON()
 
     return render_template('reviewmanager.html', reviews=reviews_json)
 
@@ -85,6 +87,7 @@ def get_student_reviews_page(id):
     reviews_json = [review.toJSON() for review in reviews]
     for review in reviews_json:
         review['student'] = get_student(review['student_id']).toJSON()
+        review['user']=get_user(review['user_id']).toJSON()
         
     return render_template('studentreviews.html', reviews=reviews_json, student=get_student(id).toJSON())
 
