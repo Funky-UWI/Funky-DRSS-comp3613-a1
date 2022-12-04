@@ -1,19 +1,20 @@
-import pytest, logging, unittest, os
+import os, tempfile, pytest, logging, unittest
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from App.main import create_app
 from App.database import create_db
-from App.models import User, Student, Review, Command, VoteCommand
-from App.controllers.auth import authenticate
-from App.controllers.user import (
+from App.models import User, Review, Student, VoteCommand
+from App.controllers import (
     create_user,
     get_all_users,
     get_all_users_json,
+    authenticate,
     get_user,
     get_user_by_username,
     update_user,
-    delete_user,
+    delete_user
 )
+
 from App.controllers.student import (
     create_student,
     get_students_by_name,
@@ -44,8 +45,6 @@ from App.controllers.command import (
     get_vote
 )
 
-from App.database import db
-
 from datetime import datetime
 
 from wsgi import app
@@ -53,12 +52,11 @@ from wsgi import app
 
 LOGGER = logging.getLogger(__name__)
 
-"""
+'''
    Unit Tests
-"""
-
-# Unit tests for User model
+'''
 class UserUnitTests(unittest.TestCase):
+
     def test_new_user(self):
         user = User("bob", "bobpass")
         assert user.username == "bob"
@@ -67,23 +65,23 @@ class UserUnitTests(unittest.TestCase):
         user = User("bob", "bobpass", 2)
         assert user.access == 2
 
-    def test_new_normal_user(self):
-        user = User("bob", "bobpass", 1)
-        assert user.access == 1
+    # def test_new_normal_user(self):
+    #     user = User("bob", "bobpass", 1)
+    #     assert user.access == 1
 
-    def test_user_is_admin(self):
-        user = User("bob", "bobpass", 2)
-        assert user.is_admin()
+    # def test_user_is_admin(self):
+    #     user = User("bob", "bobpass", 2)
+    #     assert user.is_admin()
 
-    def test_user_is_not_admin(self):
-        user = User("bob", "bobpass", 1)
-        assert not user.is_admin()
+    # def test_user_is_not_admin(self):
+    #     user = User("bob", "bobpass", 1)
+    #     assert not user.is_admin()
 
     # pure function no side effects or integrations called
     def test_to_json(self):
         user = User("bob", "bobpass")
         user_json = user.toJSON()
-        self.assertDictEqual(user_json, {"access": 1, "id": None, "username": "bob"})
+        self.assertDictEqual(user_json, {"access": 2, "id": None, "username": "bob"})
 
     def test_hashed_password(self):
         password = "mypass"
@@ -95,7 +93,6 @@ class UserUnitTests(unittest.TestCase):
         password = "mypass"
         user = User("bob", password)
         assert user.check_password(password)
-
 
 # Unit tests for Student model
 class StudentUnitTests(unittest.TestCase):
@@ -121,33 +118,6 @@ class StudentUnitTests(unittest.TestCase):
             },
         )
 
-    # def test_student_karma(self):
-    #     with self.subTest("No reviews"):
-    #         student = Student("bob", "FST", "Computer Science")
-    #         self.assertEqual(student.get_karma(), 0)
-
-    #     with self.subTest("1 review"):
-    #         student = Student("bob", "FST", "Computer Science")
-    #         mockReview = Review(1, student.id, "good")
-    #         # mockReview.vote(1, "up")
-    #         vote = VoteCommand(mockReview, get_user(1), "upvote")
-    #         db.session.add(vote)
-    #         db.session.commit()
-
-    #         student.reviews.append(mockReview)
-    #         self.assertEqual(student.get_karma(), 1)
-
-    #     with self.subTest("One negative review"):
-    #         student = Student("bob", "FST", "Computer Science")
-    #         mockReview1 = Review(1, student.id, "good")
-    #         # mockReview1.vote(1, "down")
-    #         vote = VoteCommand(mockReview, get_user(1), "downvote")
-    #         db.session.add(vote)
-    #         db.session.commit()
-
-    #         student.reviews.append(mockReview1)
-    #         self.assertEqual(student.get_karma(), -1)
-
 
 # Unit tests for Review model
 class ReviewUnitTests(unittest.TestCase):
@@ -170,116 +140,6 @@ class ReviewUnitTests(unittest.TestCase):
                 "num_downvotes": 0,
             },
         )
-
-    def test_review_vote(self):
-        with self.subTest("Upvote"):
-            review = Review(1, 1, "good")
-            review.vote(1, "up")
-            self.assertEqual(review.votes["num_upvotes"], 1)
-
-        with self.subTest("Downvote"):
-            review = Review(1, 1, "good")
-            review.vote(1, "down")
-            self.assertEqual(review.votes["num_downvotes"], 1)
-
-    def test_review_get_num_upvotes(self):
-        with self.subTest("No votes"):
-            review = Review(1, 1, "good")
-            self.assertEqual(review.get_num_upvotes(), 0)
-
-        with self.subTest("One upvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "up")
-            # VoteCommand(review, get_user(1), "upvote")
-            create_vote_command(review, get_user(1), "upvote")
-            self.assertEqual(review.get_num_upvotes(), 1)
-
-        with self.subTest("One downvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "down")
-            create_vote_command(review, get_user(1), "downvote")
-            self.assertEqual(review.get_num_upvotes(), 0)
-
-    def test_review_get_num_downvotes(self):
-        with self.subTest("No votes"):
-            review = Review(1, 1, "good")
-            self.assertEqual(review.get_num_downvotes(), 0)
-
-        with self.subTest("One upvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "up")
-            create_vote_command(review, get_user(1), "upvote")
-            self.assertEqual(review.get_num_downvotes(), 0)
-
-        with self.subTest("One downvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "down")
-            create_vote_command(review, get_user(1), "downvote")
-            self.assertEqual(review.get_num_downvotes(), 1)
-
-    def test_review_get_karma(self):
-        with self.subTest("No votes"):
-            review = Review(1, 1, "good")
-            self.assertEqual(review.get_karma(), 0)
-
-        with self.subTest("One upvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "up")
-            create_vote_command(review, get_user(1), "upvote")
-            self.assertEqual(review.get_karma(), 1)
-
-        with self.subTest("One downvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "down")
-            create_vote_command(review, get_user(1), "downvote")
-            self.assertEqual(review.get_karma(), -1)
-
-        with self.subTest("One downvote and One upvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "down")
-            create_vote_command(review, get_user(1), "upvote")
-            create_vote_command(review, get_user(1), "downvote")
-            self.assertEqual(review.get_karma(), 0)
-
-    def test_review_get_all_votes(self):
-        with self.subTest("No votes"):
-            review = Review(1, 1, "good")
-            self.assertEqual(
-                # review.get_all_votes(), {"num_upvotes": 0, "num_downvotes": 0}
-                review.get_all_votes(), 0
-            )
-
-        with self.subTest("One upvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "up")
-            create_vote_command(review, staff=get_user(1), vote_type="upvote")
-            # VoteCommand(review=review, staff=get_user(1), vote_type="upvote")
-            self.assertEqual(
-                # review.get_all_votes(), {1: "up", "num_upvotes": 1, "num_downvotes": 0}
-                review.get_all_votes(), 1
-            )
-
-        with self.subTest("One downvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "down")
-            create_vote_command(review, staff=get_user(1), vote_type="downvote")
-            # VoteCommand(review=review, staff=get_user(1), vote_type="downvote")
-            self.assertEqual(
-                # review.get_all_votes(), {1: "down", "num_upvotes": 0, "num_downvotes": 1}
-                review.get_all_votes(), 1
-            )
-
-        with self.subTest("One upvote and one downvote"):
-            review = Review(1, 1, "good")
-            # review.vote(1, "up")
-            # review.vote(2, "down")
-            create_vote_command(review, staff=get_user(1), vote_type="upvote")
-            create_vote_command(review, staff=get_user(1), vote_type="downvote")
-            self.assertEqual(
-                # review.get_all_votes(), {1: "up", 2: "down", "num_upvotes": 1, "num_downvotes": 1}
-                review.get_all_votes(), 2
-            )
-
 
 class VoteCommandUnitTests(unittest.TestCase):
     username = "rob"
@@ -320,41 +180,30 @@ class VoteCommandUnitTests(unittest.TestCase):
                 'staff': self.user.toJSON()
             })
 
-
-"""
+'''
     Integration Tests
-"""
+'''
 
 # This fixture creates an empty database for the test and deletes it after the test
 # scope="class" would execute the fixture once and resued for all methods in the class
 @pytest.fixture(autouse=True, scope="module")
 def empty_db():
-    app.config.update({"TESTING": True, "SQLALCHEMY_DATABASE_URI": "sqlite:///test.db"})
+    app.config.update({'TESTING': True, 'SQLALCHEMY_DATABASE_URI': 'sqlite:///test.db'})
     create_db(app)
-    # ctx = app.app_context()
-    # ctx.push()
     yield app.test_client()
-    # delete_db(app)
-    os.unlink(os.getcwd() + "/App/test.db")
-    # ctx.pop()
+    os.unlink(os.getcwd()+'/App/test.db')
 
 
-# Integration tests for User model
-class UserIntegrationTests(unittest.TestCase):
-    def test_authenticate(self):
-        test_user = create_user("job", "bobpass")
-        test_user = authenticate("job", "bobpass")
-        self.assertIsNotNone(test_user)
+def test_authenticate():
+    user = create_user("bob", "bobpass")
+    assert authenticate("bob", "bobpass") != None
 
-    def test_create_admin(self):
-        test_admin = create_user("rick", "rickpass", 2)
-        admin = get_user_by_username("rick")
-        assert test_admin.username == admin.username and test_admin.is_admin()
+class UsersIntegrationTests(unittest.TestCase):
 
     def test_create_user(self):
         test_user = create_user("john", "johnpass", 1)
         user = get_user_by_username("john")
-        assert user.username == "john" and not user.is_admin()
+        assert user.username == "john"
 
     def test_get_user(self):
         test_user = create_user("johnny", "johnpass", 1)
@@ -422,6 +271,7 @@ class StudentIntegrationTests(unittest.TestCase):
         assert get_student(sid) is None
 
     def test_student_karma(self):
+        staff = create_user("username3", "password", access=2)
         with self.subTest("No votes"):
             student = create_student("bob", "fst", "cs")
             review = create_review(student_id=student.id, user_id=1, text="good")
@@ -443,7 +293,9 @@ class StudentIntegrationTests(unittest.TestCase):
 # Integration tests for Review model
 class ReviewIntegrationTests(unittest.TestCase):
     def test_create_review(self):
-        test_review = create_review(1, 1, "good")
+        staff = create_user("username2", "password", 2)
+        student = create_student("name", "programme", "faculty")
+        test_review = create_review(student.id, staff.id, "good")
         review = get_review(test_review.id)
         assert test_review.text == review.text
 
@@ -482,49 +334,56 @@ class ReviewIntegrationTests(unittest.TestCase):
 
 # Integration tests for Vote model
 class VoteCommandIntegrationTests(unittest.TestCase):
-    # staff = create_user("rob", "robpass", access=1)
-    staff = get_user(1)
-    review = create_review(student_id=1, user_id=1, text="good")
+    # # staff = create_user("rob", "robpass", access=1)
+    # staff = get_user(1)
+    # review = create_review(student_id=1, user_id=1, text="good")
 
     def test_create_votecommand(self):
+        
+        staff = create_user("username", "password", 2)
+        student = create_student("name", "programme", "faculty")
+        review = create_review(student_id=student.id, user_id=staff.id, text="good")
+
         with self.subTest("Upvote"):
             date = datetime.today()
-            vote = create_vote_command(review=self.review, staff=self.staff, vote_type="upvote")
+            vote = create_vote_command(review=review, staff=staff, vote_type="upvote")
             self.assertDictEqual(
                 vote.toJSON(),
                 {
                     'id': vote.id,
                     'vote_type': 1,
                     'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
-                    'review': self.review.toJSON(),
-                    'staff': self.staff.toJSON()
+                    'review': review.toJSON(),
+                    'staff': staff.toJSON()
                 }
             )
 
         with self.subTest("Downvote"):
             date = datetime.today()
-            vote = create_vote_command(review=self.review, staff=self.staff, vote_type="downvote")
+            vote = create_vote_command(review=review, staff=staff, vote_type="downvote")
             self.assertDictEqual(
                 vote.toJSON(),
                 {
                     'id': vote.id,
                     'vote_type': -1,
                     'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
-                    'review': self.review.toJSON(),
-                    'staff': self.staff.toJSON()
+                    'review': review.toJSON(),
+                    'staff': staff.toJSON()
                 }
             )
 
     def test_get_upvotes_by_review(self):   
-        staff = get_user(1) 
+        staff = get_user(1)
+        student = create_student("name", "programme", "faculty")
+        
         with self.subTest("0 votes"):
-            review = create_review(student_id=1, user_id=1, text="good")
+            review = create_review(student_id=student.id, user_id=staff.id, text="good")
             upvotes=get_upvotes_by_review(review.id)
             upvotes_json = [upvote.toJSON() for upvote in upvotes]
             self.assertEqual(upvotes, [])
 
         with self.subTest("1 Upvote"):
-            review = create_review(student_id=1, user_id=1, text="good")
+            review = create_review(student_id=student.id, user_id=staff.id, text="good")
             date = datetime.today()
             vote = create_vote_command(review=review, staff=staff, vote_type="upvote")
             upvotes = get_upvotes_by_review(review.id)
@@ -534,7 +393,7 @@ class VoteCommandIntegrationTests(unittest.TestCase):
             )
 
         with self.subTest("2 Upvotes"):
-            review = create_review(student_id=1, user_id=1, text="good")
+            review = create_review(student_id=student.id, user_id=staff.id, text="good")
             date = datetime.today()
             upvote1 = create_vote_command(review=review, staff=staff, vote_type="upvote")
             upvote2 = create_vote_command(review=review, staff=staff, vote_type="upvote")
@@ -543,9 +402,3 @@ class VoteCommandIntegrationTests(unittest.TestCase):
                 upvotes,
                 [upvote1.toJSON(), upvote2.toJSON()]
             )
-
-    
-    # def get_downvotes_by_review(self):
-    #     downvotes=get_downvotes_by_review()
-    #     downvotes_json=get_downvotes_by_review_json()
-    #     assert downvotes_json==[review.toJSON() for review in reviews]

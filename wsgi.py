@@ -120,7 +120,7 @@ def user_tests_command(type):
     elif type == "int":
         sys.exit(pytest.main(["-k", "UserIntegrationTests"]))
     else:
-        sys.exit(pytest.main(["-k", "App"]))
+        sys.exit(pytest.main(["-k", "User"]))
 
 
 @test.command("student", help="Run Student tests")
@@ -131,7 +131,7 @@ def student_tests_command(type):
     elif type == "int":
         sys.exit(pytest.main(["-k", "StudentIntegrationTests"]))
     else:
-        sys.exit(pytest.main(["-k", "App"]))
+        sys.exit(pytest.main(["-k", "Student"]))
 
 
 @test.command("review", help="Run Student tests")
@@ -142,7 +142,7 @@ def review_tests_command(type):
     elif type == "int":
         sys.exit(pytest.main(["-k", "ReviewIntegrationTests"]))
     else:
-        sys.exit(pytest.main(["-k", "App"]))
+        sys.exit(pytest.main(["-k", "Review"]))
 
 
 @test.command("command", help="Run Command tests")
@@ -153,7 +153,7 @@ def command_tests_command(type):
     elif type == "int":
         sys.exit(pytest.main(["-k", "CommandIntegrationTests"]))
     else:
-        sys.exit(pytest.main(["-k", "App"]))
+        sys.exit(pytest.main(["-k", "Command"]))
 
 @test.command("votecommand", help="Run VoteCommand tests")
 @click.argument("type", default="all")
@@ -163,7 +163,7 @@ def votecommand_tests_command(type):
     elif type == "int":
         sys.exit(pytest.main(["-k", "VoteCommandIntegrationTests"]))
     else:
-        sys.exit(pytest.main(["-k", "App"]))
+        sys.exit(pytest.main(["-k", "VoteCommand"]))
 
 
 app.cli.add_command(test)
