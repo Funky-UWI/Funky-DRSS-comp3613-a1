@@ -162,14 +162,18 @@ def vote_review_action(review_id):
     review = get_review(review_id)
     if not review:
         flash("Review does not exist.")
-        return Response(status=404)
+        return get_student_reviews_page(review.student_id)
 
     # # staff should not be able to vote more than once, new votes override older ones
     # votes = get_votes_by_staff(staff_id=review.user_id)
     # return jsonify([vote.toJSON() for vote in votes])
 
     # staff = get_user(review.user_id)
-    vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
+    try:
+        vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
+    except:
+        flash('Failed to vote.')
+        return get_student_reviews_page(review.student_id) 
 
     # return jsonify(vote.toJSON())
     reviews = get_reviews_by_user(current_user.id)
@@ -199,4 +203,7 @@ def signup_page():
 def signup():
     data = request.form
     user = create_user(data['username'], data['password'], access=1)
+    if not user:
+        flash("Username taken.")
+        return redirect(url_for('index_views.signup'))
     return redirect(url_for('index_views.login_page', id=user.id))

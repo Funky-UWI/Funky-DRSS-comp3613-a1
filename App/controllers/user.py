@@ -4,9 +4,12 @@ from App.database import db
 
 # Creates a new user given their username, password and access level
 def create_user(username, password, access=1):
-    new_user = User(username=username, password=password, access=access)
-    db.session.add(new_user)
-    db.session.commit()
+    try:
+        new_user = User(username=username, password=password, access=access)
+        db.session.add(new_user)
+        db.session.commit()
+    except:
+        return None
     return new_user
 
 
