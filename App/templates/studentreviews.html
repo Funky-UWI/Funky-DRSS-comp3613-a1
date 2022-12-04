@@ -37,4 +37,34 @@
     {% endfor %}
 </div>
 
+<div class="fixed-action-btn">
+    <a href="#review_modal" class="btn-floating btn-large red modal-trigger" onclick="setStudentID('{{student.id}}')">
+      <i class="large material-icons">rate_review</i>
+    </a>
+  </div>
+
+  <!-- Review Modal Structure -->
+<div id="review_modal" class="modal">
+    <form id="reviewform" target="_self" action="/review?student_id={{ student_id }}" method="post">
+        <div class="modal-content">
+            <h4>Review</h4>
+            <div class="input-field">
+                <input placeholder="Review Text" name="review_text" id="review_text" type="text" class="validate">
+                <label for="review_text">Review</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!-- <a href="#!" class="modal-close waves-effect waves-green btn-flat">Post</a> -->
+            <button type="submit" class="btn-flat">Post</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function setStudentID(id) {
+        form = document.querySelector('#reviewform')
+        form.action = '/review?student_id=' + id
+    }
+</script>
+
 {% endblock %}
