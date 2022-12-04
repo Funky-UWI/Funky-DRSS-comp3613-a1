@@ -18,6 +18,7 @@
     {% for review in reviews %}
     <div class="col s12 m4">
         <div class="card small grey lighten-4">
+            <a href="#" onclick="deleteReview('{{ review.id }}')"><i class="material-icons red-text">delete</i> </a>
             <a 
                 href="#review_modal" 
                 class="modal-trigger"
@@ -68,6 +69,12 @@
         document.querySelector("#review_text").value = review_text
         form = document.querySelector('#reviewform')
         form.action = '/review/' + review_id
+    }
+    async function deleteReview(id) {
+        await fetch("/review/" + id, {
+            'method': 'delete'
+        })
+        window.location.href = ''
     }
 </script>
 {% endblock %}
