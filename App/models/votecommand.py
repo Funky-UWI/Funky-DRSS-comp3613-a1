@@ -24,14 +24,14 @@ class VoteCommand(Command):
     staff = db.relationship("User")
     db.UniqueConstraint("review_id", "staff_id", "id", name="uix_1")
 
-    def __init__(self, review, staff, vote_type):
+    def __init__(self, review_id, staff_id, vote_type):
         # self.date = date
         super().__init__()
         self.vote_type = VoteTypeDict[vote_type]
-        self.review = review
-        self.review_id = review.id
-        self.staff = staff
-        self.staff_id = staff.id
+        # self.review = review
+        self.review_id = review_id
+        # self.staff = staff
+        self.staff_id = staff_id
 
     # def execute(self):
     #     self.review.vote(self.staff_id, self.vote_type)

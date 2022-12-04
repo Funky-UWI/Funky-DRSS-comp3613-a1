@@ -142,43 +142,26 @@ class ReviewUnitTests(unittest.TestCase):
         )
 
 class VoteCommandUnitTests(unittest.TestCase):
-    username = "rob"
-    password = "robpass"
-    access = 1
-    user = User(username, password, access)
+    # username = "rob"
+    # password = "robpass"
+    # access = 1
+    # user = User(username, password, access)
 
-    name = "Bob"
-    faculty = "FST"
-    programme = "Comp Sci"
-    student = Student(name, faculty, programme)
+    # name = "Bob"
+    # faculty = "FST"
+    # programme = "Comp Sci"
+    # student = Student(name, faculty, programme)
 
-    review = Review(user_id=user.id, student_id=student.id, text="text")
+    # review = Review(user_id=user.id, student_id=student.id, text="text")
 
     def test_votecommand_create(self):
-        
         with self.subTest("Upvote"):
-            date = datetime.today()
-            vote = VoteCommand(review=self.review, staff=self.user, vote_type="upvote")
-
-            self.assertDictEqual(vote.toJSON(), {
-                'id': None,
-                'vote_type': 1,
-                'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
-                'review': self.review.toJSON(),
-                'staff': self.user.toJSON()
-            })
-
+            vote = VoteCommand(1, 1, "upvote")
+            assert vote.staff_id == 1 and vote.review_id == 1 and vote.vote_type == 1
+        
         with self.subTest("Downvote"):
-            date = datetime.today()
-            vote = VoteCommand(review=self.review, staff=self.user, vote_type="downvote")
-
-            self.assertDictEqual(vote.toJSON(), {
-                'id': None,
-                'vote_type': -1,
-                'date': datetime.strftime(date, "%d/%m/%Y %H%:%M:%S"),
-                'review': self.review.toJSON(),
-                'staff': self.user.toJSON()
-            })
+            vote = VoteCommand(1, 1, "downvote")
+            assert vote.staff_id == 1 and vote.review_id == 1 and vote.vote_type == -1
 
 '''
     Integration Tests
@@ -280,13 +263,13 @@ class StudentIntegrationTests(unittest.TestCase):
         with self.subTest("1 upvote"):
             student = create_student("bob", "fst", "cs")
             review = create_review(student_id=student.id, user_id=1, text="good")
-            vote = create_vote_command(review, get_user(1), "upvote")
+            vote = create_vote_command(review.id, 1, "upvote")
             self.assertEqual(student.get_karma(), 1)
 
         with self.subTest("1 downvote"):
             student = create_student("bob", "fst", "cs")
             review = create_review(student_id=student.id, user_id=1, text="good")
-            vote = create_vote_command(review, get_user(1), "downvote")
+            vote = create_vote_command(review.id, 1, "downvote")
             self.assertEqual(student.get_karma(), -1)
 
 
@@ -346,7 +329,7 @@ class VoteCommandIntegrationTests(unittest.TestCase):
 
         with self.subTest("Upvote"):
             date = datetime.today()
-            vote = create_vote_command(review=review, staff=staff, vote_type="upvote")
+            vote = create_vote_command(review_id=review.id, staff_id=staff.id, vote_type="upvote")
             self.assertDictEqual(
                 vote.toJSON(),
                 {
@@ -360,7 +343,7 @@ class VoteCommandIntegrationTests(unittest.TestCase):
 
         with self.subTest("Downvote"):
             date = datetime.today()
-            vote = create_vote_command(review=review, staff=staff, vote_type="downvote")
+            vote = create_vote_command(review_id=review.id, staff_id=staff.id, vote_type="downvote")
             self.assertDictEqual(
                 vote.toJSON(),
                 {
@@ -385,7 +368,7 @@ class VoteCommandIntegrationTests(unittest.TestCase):
         with self.subTest("1 Upvote"):
             review = create_review(student_id=student.id, user_id=staff.id, text="good")
             date = datetime.today()
-            vote = create_vote_command(review=review, staff=staff, vote_type="upvote")
+            vote = create_vote_command(review_id=review.id, staff_id=staff.id, vote_type="upvote")
             upvotes = get_upvotes_by_review(review.id)
             self.assertListEqual(
                 upvotes,
@@ -395,8 +378,8 @@ class VoteCommandIntegrationTests(unittest.TestCase):
         with self.subTest("2 Upvotes"):
             review = create_review(student_id=student.id, user_id=staff.id, text="good")
             date = datetime.today()
-            upvote1 = create_vote_command(review=review, staff=staff, vote_type="upvote")
-            upvote2 = create_vote_command(review=review, staff=staff, vote_type="upvote")
+            upvote1 = create_vote_command(review_id=review.id, staff_id=staff.id, vote_type="upvote")
+            upvote2 = create_vote_command(review_id=review.id, staff_id=staff.id, vote_type="upvote")
             upvotes = get_upvotes_by_review(review.id)
             self.assertListEqual(
                 upvotes,

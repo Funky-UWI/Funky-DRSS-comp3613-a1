@@ -90,7 +90,7 @@ def get_reviews_by_user(user_id):
 # Upvotes/Downvotes a post given a review id and user id based on Vote Type
 # Returns the review object if successful, None otherwise
 def vote_review(review_id, user_id, vote_type):
-    create_vote_command(get_review(review_id), get_user(user_id), vote_type)
+    create_vote_command(review_id, user_id, vote_type)
     # review = Review.query.get(review_id)
     # user = User.query.get(user_id)
     # # vote_type = VoteCommand.query.get(VoteTypeEnum)
