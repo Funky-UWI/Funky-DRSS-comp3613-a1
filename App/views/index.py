@@ -2,6 +2,7 @@ from flask import Blueprint, Response, flash, redirect, render_template, request
 from flask_login import current_user, login_required
 
 from App.controllers.auth import authenticate, login_user, logout_user
+from App.controllers.command import get_vote_by_review_and_staff, overwrite_vote
 from App.controllers.user import create_user
 from App.controllers.student import *
 from App.controllers.review import *
@@ -158,33 +159,23 @@ def vote_review_action(review_id):
     # vote_type = request.args.get("type")
     vote_type = request.form.get("type")
 
-    if not type:
+    if not vote_type:
         flash("No specified vote type. Upvote or downvote.")
-        return Response(status=404)
+        return redirect(url_for('index_views.index_page'))
 
     review = get_review(review_id)
     if not review:
         flash("Review does not exist.")
-        return get_student_reviews_page(review.student_id)
+        reviews = get_reviews_by_user(current_user.id)
+        reviews_json = [review.toJSON() for review in reviews]
+        return redirect(url_for('index_views.get_student_reviews_page', id=review.student_id))
 
-    # # staff should not be able to vote more than once, new votes override older ones
-    # votes = get_votes_by_staff(staff_id=review.user_id)
-    # return jsonify([vote.toJSON() for vote in votes])
+    vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
+    if vote==None:
+        vote = get_vote_by_review_and_staff(review_id, current_user.id)
+        overwrite_vote(vote.id, vote_type)
 
-    # staff = get_user(review.user_id)
-    try:
-        vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
-    except:
-        flash('Failed to vote.')
-        return get_student_reviews_page(review.student_id) 
-
-    # return jsonify(vote.toJSON())
-    reviews = get_reviews_by_user(current_user.id)
-    reviews_json = [review.toJSON() for review in reviews]
-    # return render_template('reviewmanager.html', reviews=reviews_json)
-    # return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
-    # return redirect(url_for("index_views.get_student_reviews_page", reviews=reviews_json))
-    return get_student_reviews_page(review.student_id)
+    return redirect(url_for('index_views.get_student_reviews_page', id=review.student_id))
 
 # @index_views.context_processor
 # def get_user_reviews():

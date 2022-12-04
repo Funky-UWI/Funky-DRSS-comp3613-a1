@@ -33,14 +33,14 @@
             </div>
             <div class="card-action">
                 <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded"
-                    method="post">
+                method="post">
                     <!-- <input type="submit" name="type" value="upvote" class="btn">
                     <input type="submit" name="type" value="downvote" class="btn"> -->
                     <button class="btn indigo lighten-3 right" type="submit" name="type" value="downvote" class="btn"><span>{{
                             review.num_downvotes }} </span><i class="material-icons right">thumb_down</i></button>
                     <button class="btn indigo lighten-3 right" type="submit" name="type" value="upvote" class="btn"><span>{{
                             review.num_upvotes }} </span><i class="material-icons right">thumb_up</i></button>
-                </form>
+                        </form>
             </div>
         </div>
     </div>
@@ -77,5 +77,11 @@
         })
         window.location.href = ''
     }
+    // async function vote(review_id, type) {
+    //     result = await fetch("/reviews/"+review_id+"/vote?type="+type, {
+    //         'method': 'post'
+    //     })
+    //     window.location.href=''
+    // }
 </script>
 {% endblock %}
