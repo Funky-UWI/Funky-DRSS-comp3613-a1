@@ -62,6 +62,8 @@ def new_review():
 
     reviews = get_reviews_by_user(current_user.id)
     reviews_json = [review.toJSON() for review in reviews]
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
     return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
 
 @index_views.route('/review/<id>', methods=['POST'])
@@ -69,7 +71,11 @@ def new_review():
 def edit_review(id):
     data = request.form
     update_review(id, data.get("review_text"))
-    return review_manager_page()
+    reviews = get_reviews_by_user(current_user.id)
+    reviews_json = [review.toJSON() for review in reviews]
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
+    return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
 
 @index_views.route('/student/<id>', methods=["GET"])
 @login_required
@@ -90,7 +96,10 @@ def delete_student_route(id):
     delete_student(id)
     reviews = get_reviews_by_student(id)
     reviews_json = [review.toJSON() for review in reviews]
-    return student_manager_page()
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
+        
+    return redirect(url_for('get_student_reviews_page', reviews=reviews_json, student=get_student(id).toJSON()))
 
 @index_views.route('/review/<id>', methods=["DELETE"])
 @login_required
@@ -98,14 +107,21 @@ def delete_review_route(id):
     delete_review(id)
     reviews = get_reviews_by_student(id)
     reviews_json = [review.toJSON() for review in reviews]
-    return review_manager_page()
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
+    return redirect(url_for('index_views.review_manager_page', reviews=reviews_json))
 
 @index_views.route('/student/<id>', methods=["POST"])
 @login_required
 def update_student_route(id):
     data = request.form
     update_student(id, data['edit_name'], data['edit_programme'], data['edit_faculty'])
-    return student_manager_page()
+    reviews = get_reviews_by_student(id)
+    reviews_json = [review.toJSON() for review in reviews]
+    for review in reviews_json:
+        review['student'] = get_student(review['student_id']).toJSON()
+        
+    return redirect(url_for('index_views.student_manager_page', reviews=reviews_json, student=get_student(id).toJSON()))
 
 @index_views.route('/student', methods=["POST"])
 @login_required
