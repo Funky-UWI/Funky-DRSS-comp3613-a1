@@ -41,7 +41,6 @@ class VoteCommand(Command):
 
     # def undo(self):
     #     if self.vote_type==1:
-
     
     def toJSON(self):
         return {

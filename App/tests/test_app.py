@@ -42,7 +42,8 @@ from App.controllers.command import (
     create_vote_command,
     get_upvotes_by_review,
     get_downvotes_by_review,
-    get_vote
+    get_vote,
+    get_vote_by_review_and_staff
 )
 
 from datetime import datetime
@@ -162,7 +163,6 @@ class VoteCommandUnitTests(unittest.TestCase):
         with self.subTest("Downvote"):
             vote = VoteCommand(1, 1, "downvote")
             assert vote.staff_id == 1 and vote.review_id == 1 and vote.vote_type == -1
-
 '''
     Integration Tests
 '''
@@ -385,3 +385,14 @@ class VoteCommandIntegrationTests(unittest.TestCase):
                 upvotes,
                 [upvote1.toJSON(), upvote2.toJSON()]
             )
+
+    def test_get_vote_by_review_and_staff(self):
+        staff = get_user(1)
+        student = create_student("name", "programme", "faculty")
+        review = create_review(student_id=student.id, user_id=staff.id, text="good")
+        date = datetime.today()
+        upvote1 = create_vote_command(review_id=review.id, staff_id=staff.id, vote_type="upvote")
+        self.assertDictEqual(
+            upvote1.toJSON(),
+            get_vote_by_review_and_staff(review.id, staff.id).toJSON()
+        )

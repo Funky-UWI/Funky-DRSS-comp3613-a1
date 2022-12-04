@@ -56,3 +56,26 @@ def get_votes_by_review(review_id):
 def get_vote(id):
     vote = VoteCommand.query.get(id)
     return vote
+
+def get_vote_by_review_and_staff(review_id, staff_id):
+    votes = VoteCommand.query.filter_by(review_id = review_id, staff_id = staff_id)
+    # print(votes[0].toJSON())
+    return votes[0]
+
+def delete_vote(id):
+    vote = VoteCommand.query.get(id)
+    db.session.delete(vote)
+    db.session.commit()
+    return vote
+
+def overwrite_vote(id, vote_type):
+    VoteTypeDict = {
+    "upvote": 1,
+    "downvote": -1,
+    }   
+    old_vote = delete_vote(id)
+    if old_vote.vote_type == VoteTypeDict[vote_type]:
+        return old_vote
+    vote = create_vote_command(old_vote.review_id, old_vote.staff_id, vote_type)
+    return vote
+    

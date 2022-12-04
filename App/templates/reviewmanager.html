@@ -76,7 +76,7 @@
         window.location.href = ''
     }
     async function vote(review_id, type) {
-        await fetch("/reviews/"+review_id+"/vote?type="+type, {
+        result = await fetch("/reviews/"+review_id+"/vote?type="+type, {
             'method': 'post'
         })
         window.location.href=''
