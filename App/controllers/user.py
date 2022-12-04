@@ -9,6 +9,7 @@ def create_user(username, password, access=1):
         db.session.add(new_user)
         db.session.commit()
     except:
+        db.session.rollback()
         return None
     return new_user
 
