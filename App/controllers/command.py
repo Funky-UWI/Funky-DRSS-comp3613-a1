@@ -13,7 +13,11 @@ def create_command():
 def create_vote_command(review_id, staff_id, vote_type):
     command = VoteCommand(review_id, staff_id, vote_type)
     db.session.add(command)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except:
+        db.session.rollback()
+        return None
     return command
 
 # def create_vote_command(review_id, staff_id, vote_type):

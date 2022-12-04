@@ -162,19 +162,19 @@ def vote_review_action(review_id):
     review = get_review(review_id)
     if not review:
         flash("Review does not exist.")
-        return get_student_reviews_page(review.student_id)
+        reviews = get_reviews_by_user(current_user.id)
+        reviews_json = [review.toJSON() for review in reviews]
+        return redirect(url_for('index_views.index_page', reviews=reviews_json))
 
     # # staff should not be able to vote more than once, new votes override older ones
     # votes = get_votes_by_staff(staff_id=review.user_id)
     # return jsonify([vote.toJSON() for vote in votes])
 
     # staff = get_user(review.user_id)
-    try:
-        vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
-    except:
-        flash('Failed to vote.')
-        return get_student_reviews_page(review.student_id) 
-
+    vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
+    if vote==None:
+        flash("Can only vote once.")
+    
     # return jsonify(vote.toJSON())
     reviews = get_reviews_by_user(current_user.id)
     reviews_json = [review.toJSON() for review in reviews]
