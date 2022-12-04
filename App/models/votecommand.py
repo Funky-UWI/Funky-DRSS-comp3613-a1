@@ -22,7 +22,7 @@ class VoteCommand(Command):
 
     staff_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     staff = db.relationship("User")
-    db.UniqueConstraint("review_id", "staff_id", "id", name="uix_1")
+    db.UniqueConstraint("VoteCommand.review_id", "VoteCommand.staff_id", name="uix_1")
 
     def __init__(self, review_id, staff_id, vote_type):
         # self.date = date

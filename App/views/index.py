@@ -152,10 +152,10 @@ def login():
 @index_views.route("/reviews/<int:review_id>/vote", methods=["POST"])
 @login_required
 def vote_review_action(review_id):
-    # vote_type = request.args.get("type")
-    vote_type = request.form.get("type")
+    vote_type = request.args.get("type")
+    # vote_type = request.form.get("type")
 
-    if not type:
+    if not vote_type:
         flash("No specified vote type. Upvote or downvote.")
         return Response(status=404)
 
@@ -180,8 +180,9 @@ def vote_review_action(review_id):
     reviews_json = [review.toJSON() for review in reviews]
     # return render_template('reviewmanager.html', reviews=reviews_json)
     # return redirect(url_for("index_views.review_manager_page", reviews=reviews_json))
-    # return redirect(url_for("index_views.get_student_reviews_page", reviews=reviews_json))
-    return get_student_reviews_page(review.student_id)
+    # return redirect(url_for("index_views.get_student_reviews_page", reviews=reviews_json, student=get_student(id).toJSON()))
+    # return get_student_reviews_page(review.student_id)
+    return 200
 
 # @index_views.context_processor
 # def get_user_reviews():
