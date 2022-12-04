@@ -12,7 +12,7 @@
     
     <div id="{{ review.id }}" class="col s12 m4">
         <div class="card small grey lighten-4">
-            <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="multipart/form-data"
+            <form id="voteform" action="/reviews/{{ review.id }}/vote" enctype="application/x-www-form-urlencoded"
                 method="post">
                 <!-- <a class="btn right"><span>{{ review.num_downvotes }} </span><i
                         class="material-icons right">thumb_down</i> </a>

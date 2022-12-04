@@ -158,25 +158,20 @@ def vote_review_action(review_id):
 
     if not vote_type:
         flash("No specified vote type. Upvote or downvote.")
-        return Response(status=404)
+        return redirect(url_for('index_views.index_page'))
 
     review = get_review(review_id)
     if not review:
         flash("Review does not exist.")
         reviews = get_reviews_by_user(current_user.id)
         reviews_json = [review.toJSON() for review in reviews]
-        return redirect(url_for('index_views.index_page', reviews=reviews_json))
+        return redirect(url_for('index_views.get_student_reviews_page', id=review.student_id))
 
     vote = create_vote_command(review_id, current_user.id, vote_type=vote_type)
     if vote==None:
         vote = get_vote_by_review_and_staff(review_id, current_user.id)
         overwrite_vote(vote.id, vote_type)
-        return redirect('/student/'+str(review.student_id))
-        return jsonify(vote.toJSON())
-        
-    
-    reviews = get_reviews_by_user(current_user.id)
-    reviews_json = [review.toJSON() for review in reviews]
+
     return redirect(url_for('index_views.get_student_reviews_page', id=review.student_id))
 
 # @index_views.context_processor
