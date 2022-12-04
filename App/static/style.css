@@ -1,5 +1,7 @@
 /* required to keep content out of sidenav */
-#content {
+#content,
+#flashbar
+{
     padding-left: 150px;
     /*or 300*/
 }
