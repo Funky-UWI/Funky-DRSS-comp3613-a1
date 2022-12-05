@@ -19,7 +19,7 @@
     <div class="col s12 16">
        <div class="card small grey lighten-4 hoverable"> 
 
-                <a style="color: white ;"   href="/student/{{ review.student.id }}" class="btn indigo lighten-3"> <span>{{ review.student.name }}</span> <i class="material-icons"></i> </a>
+                <a style="color: white; max-width:90%;"  href="/student/{{ review.student.id }}" class="btn indigo lighten-3 truncate"> <span>{{ review.student.name }}</span> <i class="material-icons"></i> </a>
             
             <div class="card-content black-text">
                 <p>review: {{ review.text }}</p>
