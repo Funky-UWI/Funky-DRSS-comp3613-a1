@@ -14,9 +14,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
     access = db.Column(db.Integer, nullable=False)
+    reviews = db.relationship(
+        "Review", backref="user", lazy=True, cascade="all, delete-orphan")
     
 
-    def __init__(self, username, password, access):
+    def __init__(self, username, password, access=ACCESS["admin"]):
         self.username = username
         self.set_password(password)
         self.access = 1
@@ -44,9 +46,10 @@ class User(db.Model, UserMixin):
         }
 
 class Admin(User):
-    def __init__(self,username,password, access):
-        super().__init__(username,password)
+    def __init__(self,username,password, access, reviews):
+        super().__init__(username,password, access, reviews)
         self.access = 2
+        delattr('Admin', 'reviews')
     
     def is_admin(self):
         return self.access == ACCESS["admin"]
@@ -64,8 +67,8 @@ class Staff(User):
     def __init__(self,username,password, access, reviews):
         super().__init__(username,password)
         reviews = db.relationship(
-        "Review", backref="user", lazy=True, cascade="all, delete-orphan"
-    )
+        "Review", backref="user", lazy=True, cascade="all, delete-orphan")
+       
 
 
         
