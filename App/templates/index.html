@@ -16,8 +16,8 @@
 
 <div class="row">
     {% for review in reviews %}
-    <div class="col s12 m4">
-        <div class="card small grey lighten-4 hoverable">
+    <div class="col s12 16">
+       <div class="card small grey lighten-4 hoverable"> 
             <div class="card-content indigo">
 
                 <a href="/student/{{ review.student.id }}" class="card-title white-text"> <span>{{ review.student.name }}</span> </a>
@@ -40,8 +40,10 @@
             </div>
         </div>
     </div>
+
     {% endfor %}
 </div>
+
 
 
 <!-- Review Modal Structure -->

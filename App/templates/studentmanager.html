@@ -34,12 +34,15 @@
     {% for student in students %}
     <div class="col s12 m4">
         <div class="card small grey lighten-4">
+            <div class=" card-title card-content indigo">
+                <span style="color: white;" >{{ student.name }}</span>
+           </div>
             <a href="#" onclick="deleteStudent('{{ student.id }}')"><i class="material-icons red-text">delete</i> </a>
             <a href="#edit_student_modal" class="modal-trigger" onclick="setStudentEdit(
                 '{{student.id}}', '{{student.name}}', '{{student.faculty}}', '{{student.programme}}')">
                 <i class="material-icons right ">edit</i> </a>
             <div class="card-content black-text">
-                <span class="card-title ">{{ student.name }}</span>
+                <!-- <span class="card-title ">{{ student.name }}</span> -->
                 <p>faculty: {{ student.faculty }}</p>
                 <p>Degree: {{ student.programme }}</p>
                 <P>Karma Rating: {{ student.karma }}</P>
