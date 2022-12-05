@@ -16,13 +16,11 @@ class User(db.Model, UserMixin):
     access = db.Column(db.Integer, nullable=False)
     
 
-    def __init__(self, username, password, access=ACCESS["admin"]):
+    def __init__(self, username, password, access):
         self.username = username
         self.set_password(password)
-        self.access = 2
+        self.access = 1
 
-    def is_admin(self):
-        return self.access == ACCESS["admin"]
 
     def allowed(self, access_level):
         return self.access >= access_level
@@ -50,14 +48,17 @@ class Admin(User):
         super().__init__(username,password)
         self.access = 2
     
-    def create_student(name, faculty, programme):
-        return app.controllers.Student.create_student(name, faculty, programme)
+    def is_admin(self):
+        return self.access == ACCESS["admin"]
+    
+   # def create_student(name, faculty, programme):
+    #    return app.controllers.Student.create_student(name, faculty, programme)
 
-    def update_student(id):
-        return app.controllers.Student.update_student(id)
+   # def update_student(id):
+    #    return app.controllers.Student.update_student(id)
 
-    def delete_student(id):
-        return app.controllers.Student.delete_student(id)
+   # def delete_student(id):
+    #    return app.controllers.Student.delete_student(id)
 
 class Staff(User):
     def __init__(self,username,password, access, reviews):
