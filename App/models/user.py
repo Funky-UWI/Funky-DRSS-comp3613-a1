@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     def __init__(self, username, password, access=ACCESS["admin"]):
         self.username = username
         self.set_password(password)
-        self.access = 1
+        self.access = 2
 
 
     def allowed(self, access_level):
