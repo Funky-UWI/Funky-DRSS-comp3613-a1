@@ -17,9 +17,12 @@
 <div class="row">
     {% for review in reviews %}
     <div class="col s12 m4">
-        <div class="card small grey lighten-4">
+        <div class="card small grey lighten-4 hoverable">
+            <div class="card-content indigo">
+
+                <a href="/student/{{ review.student.id }}" class="card-title white-text"> <span>{{ review.student.name }}</span> </a>
+            </div>
             <div class="card-content black-text">
-                <a href="/student/{{ review.student.id }}" class=" card-title btn indigo lighten-3"> <span>{{ review.student.name }}</span> </a>
                 <p>review: {{ review.text }}</p>
                 <P>karma: {{ review.karma }}</P>
                 <p>staff: {{review.user.username}}</p>
