@@ -15,7 +15,8 @@ def create_vote_command(review_id, staff_id, vote_type):
     db.session.add(command)
     try:
         db.session.commit()
-    except:
+    except Exception as e:
+        print(e.__str__)
         db.session.rollback()
         return None
     return command
